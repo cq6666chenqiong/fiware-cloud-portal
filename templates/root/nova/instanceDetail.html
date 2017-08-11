@@ -1,0 +1,48 @@
+<script id="instanceDetailTemplate" type="text/html">
+<!--
+Description: Instance Detail
+src: templates/root/nova/instanceDetail.html
+-->
+<div id="consult_instance" class="row-fluid entity_consult">
+   <% if (vdc !== undefined) { %>
+    <ul class="breadcrumb">
+        <li>
+            <a href="#nova/vdcs/"><strong>VDCs</strong></a><span class="divider">/</span>
+        </li>
+        <li>
+            <a href="#nova/vdcs/<%= vdc %>"><%= vdc %></a><span class="divider">/</span>
+        </li>
+        <li>
+            <a href="#nova/vdcs/<%= vdc %>/<%= service %>"><%= service %></a><span class="divider">/</span>
+        </li>
+        <li>
+            <%= model.get("name") %>
+        </li>
+    </ul>
+    <% } %>
+        <ul id="instance_details" class="nav nav-tabs">
+            <li id="overview" class="<%= (subview == 'overview') ? 'active':'' %>">
+                <a id="overviewBtn" data-i18n="Overview">Overview</a>
+            </li>
+            <li id="log" class="<%= (subview == 'logs') ? 'active':'' %>">
+                <a id="instance_logs">Log</a>
+            </li>
+            <li id="vnc" class="<%= (subview == 'vnc') ? 'active':'' %>">
+                <a id="instance_vnc">Connection</a>
+            </li>
+            <li id="monitoring" class="<%= (subview == 'monitoring') ? 'active':'' %>">
+                <a id="instance_monitoring">Monitoring</a>
+            </li>
+        </ul>
+        <div class="tab-content  entity_detail_pro">
+            <div id="instance_details__overview" class="tab-pane <%= (subview == 'overview') ? 'active':'' %>">
+            </div>
+            <div id="instance_details__log" class="tab-pane <%= (subview == 'logs') ? 'active':'' %>">
+            </div>
+            <div id="instance_details__vnc" class="tab-pane <%= (subview == 'vnc') ? 'active':'' %>">
+            </div>
+            <div id="instance_details__monit" style="position:relative" class="tab-pane <%= (subview == 'monitoring') ? 'active':'' %>">
+            </div>
+        </div>
+</div>
+</script>

@@ -1,0 +1,54 @@
+var config = {};
+
+config.process_user = '';
+config.process_group = '';
+
+// nav bar portals
+config.fiportals = {
+    // Mandatory portals
+    'Cloud': 'http://cloud.lab.fi-ware.org',
+    'Account': 'https://account.lab.fi-ware.org',
+    'Help&info': 'http://lab.fi-ware.org'
+    // Another portals
+    //,'': ''
+};
+
+// Mandatory. TCP port to bind the server to
+config.http_port = 80;
+
+// Set this var to undefined if you don't want the server to listen on HTTPS
+config.https = {
+    enabled: false,
+    cert_file: 'ssl/cert.pem',
+    key_file: 'ssl/key.pem',
+    port: 443
+};
+
+config.useIDM = false;
+
+// OAuth configuration. Only set this configuration if useIDM is true.
+config.oauth = {
+	account_server: '',
+    client_id: '',
+    client_secret: '',
+    callbackURL: ''
+};
+
+// Keystone configuration.
+config.keystone = {
+	host: '',
+	port: '',
+	admin_host: '',
+	admin_port: '', 
+	username: '',
+	password: '',
+	tenantId: ''
+};
+
+config.time_stats_logger = false;
+
+// Number of cores to use
+// If set to 0 or to a higher number than the max available, it uses all of them.
+config.max_cores = 1;
+
+module.exports = config;

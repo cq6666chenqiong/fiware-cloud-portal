@@ -1,0 +1,71 @@
+<script id="editProjectFormTemplate" type="text/html">
+<div id="edit_project" class="modal hide in" style="display: block; ">
+    <!--
+    Description: Edit Project Form
+    src: templates/forms/editProject.html
+    -->
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3>Edit Project</h3>
+    </div>
+
+    <form class="" action="#" method="#">
+        <div class="modal-body clearfix">
+
+            <div class="left">
+                <fieldset>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_name">ID</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <p>
+                        	<%=model.get('id')%>
+                        </p>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_name">Name *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <input id="name" type="text" name="name" maxlength="255" value="<%=model.get('name')%>">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Description of Project *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <textarea id="id_description" rows="10" cols="40" name="description" ><%=model.get('description')%></textarea>
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+					    <label for="id_enabled">Enabled</label>
+
+					    <span class="help-block" style="display: none;"></span>
+					    <div class="input">
+					      <input checked="checked" type="checkbox" name="enabled" id="id_enabled" <% if (model.get('enabled')) {%>checked<%}%>">
+					    </div>
+					</div>
+
+                </fieldset>
+            </div>
+            <div class="right">
+            	<h3>Description</h3>
+                <p>
+		           From here you can edit a project.
+		        </p>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <p class="mandatoryMess">* Mandatory fields.</p>
+            <button id="updateBtn" class="btn btn-blue update-project pull-right" data-dismiss="modal">Edit Project</button>
+            <a id="cancelBtn" class="close btn seconday cancel close" data-dismiss="modal">Cancel</a>
+        </div>
+    </form>
+</div>
+</script>

@@ -1,0 +1,113 @@
+<script id="consultImageDetailFormTemplate" type="text/html">
+<div id="consult_image" class="help_page">
+    <!--
+    Description: Consult Image Detail
+    src: templates/root/nova/imageDetail.html
+    -->
+
+    <%
+    var bytes = model.get("size");
+    var kbytes, mbytes, gbytes, size;
+    if (bytes >= 1024) {
+        kbytes = Math.round(bytes / 1024 * 10) / 10;
+        size = kbytes + " KB";
+        if (kbytes >= 1024) {
+            mbytes = Math.round(kbytes / 1024 * 10) / 10;
+            size = mbytes + " MB";
+            if (mbytes >= 1024) {
+                gbytes = Math.round(mbytes / 1024 * 10) / 10;
+                size = gbytes + " GB";
+            } else {
+                size = Math.round(mbytes * 10) / 10 + " MB";
+            }
+        } else {
+            size = Math.round(kbytes * 10) / 10 + " KB";
+        }
+    } else {
+        size = Math.round(bytes * 10) / 10 + " bytes";
+    }
+
+    %>
+    <div class="entity_consult">
+        <div class="entity_detail">
+            <div id="image_details__overview1" class="active row-fluid">
+                <div class="status span4">
+                    <h4>Info</h4>
+                    <hr class="header_rule">
+                    <ul>
+                        <li>
+                            <strong>Name:</strong>&nbsp;<%= model.get('name')%>
+                        </li>
+                        <li>
+                            <strong>ID:</strong>&nbsp;<%= model.get('id')%>
+                        </li>
+                        <%if(model.get('nid')) {%>
+                        <li>
+                            <strong>GE ID:</strong>&nbsp;<%= model.get('nid')%>
+                        </li>
+                        <%}%>
+                    </ul>
+                </div>
+                <div class="status span4">
+                    <h4>Status</h4>
+                    <hr class="header_rule">
+                    <ul>
+                        <li>
+                            <strong>Status:</strong>&nbsp;<%=model.get('status')%>
+                        </li>
+                        <li>
+                            <strong>Public:</strong>&nbsp;<%= model.get('is_public')%>
+                        </li>
+                        <li>
+                            <strong>Checksum:</strong>&nbsp;<%= model.get('checksum')%>
+                        </li>
+                        <li>
+                            <strong>Created:</strong>&nbsp;<%=model.get('created_at')%>
+                        </li>
+                        <li>
+                            <strong>Updated:</strong>&nbsp;<%= model.get('updated_at')%>
+                        </li>
+                    </ul>
+                </div>
+                <div class="specs span4">
+                    <h4>Specs</h4>
+                    <hr class="header_rule">
+                    <ul>
+                        <li>
+                            <strong>Size:</strong>&nbsp;<%= size%>
+                        </li>
+                        <li>
+                            <strong>Container Format:</strong>&nbsp;<%= model.get('container_format')%>
+                        </li>
+                        <li>
+                            <strong>Disk Format:</strong>&nbsp;<%= model.get('disk_format')%>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="image_details__overview2" class="active row-fluid">
+                <div class="properties span4">
+                    <h4>Custom Properties</h4>
+                    <hr class="header_rule">
+                    <ul>
+
+                        <%
+                        if (model.get('sdc_aware')) {
+                        %>
+                        <li>
+                            <strong>SDC Available:</strong>&nbsp; Instances launched with this image allow Software Management using SDC
+                        </li>
+                        <%
+                        };
+                        %>
+                    </ul>
+                </div>
+
+                <div class="properties span4">
+                    <button id="launch_img" class="pull-right btn btn-small btn-white btn-create" style="margin-top:40px;" data-i18n="Launch Image">Launch Image</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</script>

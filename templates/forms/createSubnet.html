@@ -1,0 +1,96 @@
+<script id="createSubnetFormTemplate" type="text/html">
+<div id="create_subnet" class="modal hide in" style="display: block; overflow: visible;">
+<!--
+Description: Create Subnet Form
+src: templates/forms/createSubnet.html
+-->
+
+<div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">&times</a>
+        <h3>Create Subnet</h3>
+</div>
+
+<form id="form" onSubmit="return false;">
+
+	<div id="input_subnet" class="tab-pane tab-adjustable active" style="overflow: visible;">
+		<div class="modal-body clearfix">
+            <div class="left">
+            	<fieldset>		            
+                    <div class="control-group form-field clearfix">
+                        <label for="subnet-name">Subnet Name</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <input type="text" name="subnet_name" id="subnet_name" />
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="network-address">Network Address*</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <input placeholder="x.x.x.x/x" required="required" type="text" name="network_address" id="network_address" pattern='^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(\d|[1-2]\d|3[0-2]))$'/>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="allocation-pools">Allocation Pools</label>
+                        <span class="help-block"></span>
+                        <div class="input tip" data-tooltip="IP address allocation pools. One entry per line.">
+                            <textarea placeholder="<start_ip_address>,<end_ip_address>" id="allocation_pools" rows="3" cols="15" name="allocation_pools"></textarea>
+                        </div>
+                    </div>
+                    <!--<div class="control-group form-field clearfix">
+                        <label for="ip-version">IP Version</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                        	<select name="ip_version" id="ip_version">
+                            	<option value="4">IPv4</option>
+                            	<option value="6">IPv6</option>
+                        	</select>
+                        </div>
+                    </div>-->
+                    <div class="control-group form-field clearfix">
+                        <label for="enable-dhcp" class="label_check">Enable DHCP</label>
+                        <span class="help-block"></span>
+                        <input type="checkbox" checked="checked" name="enable_dhcp" value="" id="enable_dhcp" />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="right">
+                <fieldset>
+                	<div class="control-group form-field clearfix">
+                        <label for="gateway-ip">Gateway IP</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <input type="text" name="gateway_ip" id="gateway_ip"/>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="dns-name-servers">DNS Name Servers</label>
+                        <span class="help-block"></span>
+                        <div class="input tip" data-tooltip="One entry per line.">
+                            <textarea id="dns_name_servers" rows="3" cols="15" name="dns_name_servers"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="host-routes">Host Routes</label>
+                        <span class="help-block"></span>
+                        <div class="input tip", data-tooltip="Additional routes announced to the hosts. One entry per line.">
+                            <textarea placeholder="<destination_netw>,<nexthop>" id="host_routes" rows="3" cols="15" name="host_routes"></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+	</div>
+
+	<div class="modal-footer">
+        <p class="mandatoryMess">* Mandatory fields.</p>
+        <input type="submit" id="create_subnet_button"  class="btn btn-blue btn-create-subnet pull-right" value="Create"/>
+        <a id="cancelBtn-subnet" class="btn secondary cancel close">Cancel</a>
+	</div>
+</form>
+
+</script>
+
+
+

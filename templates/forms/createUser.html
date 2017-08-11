@@ -1,0 +1,84 @@
+<script id="createUserFormTemplate" type="text/html">
+<div id="create_user" class="modal hide in" style="display: block; ">
+    <!--
+    Description: Create User Form
+    src: templates/forms/createUser.html
+    -->
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3>Create User</h3>
+    </div>
+
+    <form id="form" onSubmit="return false;">
+        <div class="modal-body clearfix">
+
+            <div class="left">
+                <fieldset>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_name">User Name *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <input required id="name" type="text" name="name" maxlength="255">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Email *</label>
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <input id="email" type="email" name="email">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Password *</label>
+                        <span class="help-block" style="display: none; "></span>
+                        <div id= "password" class="input">
+                        	<a class="tip" data-tooltip="Show password"><img class="btn-eye" src="../../images/btn-eye.png"></a>
+                        	<a class="tip" data-tooltip="Hide password"><img class="btn-eye-active" src="../../images/btn-eye-active.png" style="display: none; "></a>
+                            <input required id="user_password" type="password" class="password"  name="user_password" maxlength="255">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Confirm Password *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div id="confirm_password" class="input">
+                           	<input required id="confirm_password" type="password" class="password" name="confirm_password" maxlength="255">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+					    <label for="id_name">Primary Project</label>
+					 	<select id="project_switcher" tabindex="1" class="inline">
+                            <% for (var idx in tenants.models) {
+                                var tenant = tenants.models[idx];
+                            %>
+					 		<option value="<%=tenant.get('id')%>"><%= tenant.get('name')%></option>
+                            <%
+                            }
+                            %>
+					   	</select>
+		 			 </div>
+
+                </fieldset>
+            </div>
+            <div class="right">
+                <h3>Description</h3>
+                <p>
+                    From here you can create a new user and assign them to a project.
+                </p>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <p class="mandatoryMess">* Mandatory fields.</p>
+            <input type="submit" class="btn btn-blue create-user pull-right"value="Create User"/>
+            <a id="cancelBtn" class="close btn seconday cancel close" data-dismiss="modal">Cancel</a>
+        </div>
+    </form>
+</div>
+</script>

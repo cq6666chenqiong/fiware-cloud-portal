@@ -1,0 +1,57 @@
+<script id="sideBarTemplate" type="text/html">
+<!--
+Description: Side Bar
+src: templates/root/sideBar.html
+-->
+<div class="menuv">
+    <div id="sideBarTitle" class="sideBarTitle" data-i18n="<%= title %>">
+        <%=title%>
+    </div>
+
+    <% if (showTenants) { %>
+    <div class="tenant_switch">
+        <select id="tenant_switcher" tabindex="1" class="inline">
+            <% for (var index in loginModel.get("tenants")) {
+            var ten = loginModel.get("tenants")[index];
+            %>
+            <option value="#auth/switch/<%= ten.id%>/" <%
+            if (loginModel.get("tenant_id") == ten.id) {
+            %>selected="selected" <%}%>><%= ten.name%></option>
+            <%}%>
+        </select>
+    </div>
+    <!--<button onclick="" class="btn btn-default btn-openrc"><i id="project_info_icon" class="icon-info-sign"></i><span>Info</span></button>-->
+    <button onclick="" class="btn btn-default btn-openrc"><i id="project_info_icon" class="icon-info-sign"></i><span>信息</span></button>
+    <% } %>
+</div>
+<ul class="main_nav">
+    <% for (var index in models) {
+    var model = models[index];
+    %>
+    <li class="<%= (model.get('type') === 'title') ? 'section': ''%>">
+        <% if (model.get('type') === 'title') { %>
+        <%= model.get('name') %>
+        <% } else if (model.get('type') === 'regions') { %>
+
+        <div class="region_switch">
+            <select id="region_switcher" tabindex="1" class="chosen-select">
+                <% for (var index in loginModel.get('regions')) {
+                var reg = loginModel.get('regions')[index];
+                %>
+                <option value="#reg/switch/<%= reg%>/"<%
+                if (loginModel.get("current_region") == reg) {
+                %>selected="selected" <%}%>><%= reg%></option>
+                <%}%>
+            </select>
+        </div>
+        <% } else { %>
+        
+        <!--<span class="icon <%=model.get('iconcss')%> <% if(model.get('active')) { %>active<% } %>"/>!--><a href="<%= model.get('url') %>" <% if(model.get('active')) { %> class="active <%=model.get('css')%> <%=model.get('iconcss')%>" <% } else { %>class="<%=model.get('css')%> <%=model.get('iconcss')%>" <% } %> tabindex='1' data-i18n="<%= model.get('name') %>"><%= model.get('name') %></a>
+        <% } %>
+
+    </li>
+    <% } %>
+</ul>
+</section>
+
+</script>

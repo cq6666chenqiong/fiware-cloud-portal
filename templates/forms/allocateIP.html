@@ -1,0 +1,65 @@
+<script id="allocateIPFormTemplate" type="text/html">
+
+<%
+var prctg = 100 * (used) / quotas.get("quota_set")["floating_ips"];
+var to_add = 100 * (used + 1) / quotas.get("quota_set")["floating_ips"];
+if (to_add > 100) {
+to_add = 100;
+}
+%>
+<div id="allocate_IP" class="modal hide ">
+    <form id="form" onSubmit="return false;">
+        <div class="modal-header">
+            <a id="closeModal" href="#" class="close" data-dismiss="modal">&times;</a>
+            <h3>Allocate Floating IP</h3>
+        </div>
+
+        <div class="modal-body clearfix">
+            <div class="left">
+                <fieldset>
+                    <input type="hidden" name="method" value="FloatingIpAllocate" id="id_method">
+                    <input type="hidden" name="tenant_name" value="demo" id="id_tenant_name">
+                    <div class="control-group form-field clearfix">
+                        <label for="id_pool">Pool</label>
+                        <span class="help-block" style="display: none;"></span>
+                        <div class="input">
+
+                        <select id="pool_switcher" tabindex="1" class="inline">
+                            <%
+                                for (var index in pools.models) {
+                                var pool = pools.models[index].get("name");
+                            %>
+                            <option value="<%= pool%>"><%= pool%></option>
+                            <% } %>
+                        </select>
+
+                        <p class="floating_ip_error_msg"><%= (prctg >= 100) ? "ERROR: You exceeded the limit of Floating IPs" : ""%></p>
+                        </div>
+                    </div>
+                 </fieldset>
+            </div>
+            <div class="right">
+                <h3>Description</h3>
+                <p>Allocate a floating IP from a given floating ip pool.</p>
+                <h3>Project Quotas</h3>
+                <div class="quota_title">
+                  <strong>Floating IP <span>(<%=used%>)</span></strong>
+                  
+                  <p><%=quotas.get("quota_set")["floating_ips"]-used%> Available</p>
+                </div>
+                <div class="clearfix"></div>
+                <div class="quota_bar">
+                    <div class="progress_bar">
+                        <div class="progress_bar_fill" style="width: <%= prctg %>%"></div>
+                        <div id="" class="progress_bar_new" style="width: <%= to_add %>%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-blue pull-right" value="Allocate IP" <%= (prctg >= 100) ? 'disabled' : ""%> >
+            <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">Cancel</a>
+        </div>
+    </form>
+</div>
+</script>

@@ -1,0 +1,91 @@
+<script id="updateImageFormTemplate" type="text/html">
+<div id="update_image" class="modal hide " >
+    <!--
+    Description: Update Image Form
+    src: templates/forms/updateImage.html
+    -->
+    <div class="modal-header">
+        <a id="close" href="#" class="close" data-dismiss="modal">&times;</a>
+        <h3>Edit Image</h3>
+    </div>
+    <form id="update_image_form" class="" action="#">
+        <div class="modal-body clearfix">
+            <div class="left">
+                <fieldset>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_name">Name *</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <input id="id_name" type="text" name="name" value="<%= model.get('name') %>" maxlength="25">
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_kernel">Kernel ID</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p><br/></p>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_ramdisk">Ramdisk ID</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p><br/></p>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_architecture">Architecture</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p><br/></p>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_container_format">Container Format</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p>ari</p>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_disk_format">Disk Format</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p>ari</p>
+                        </div>
+                    </div>
+                    <div class="control-group form-field clearfix">
+                        <label for="id_disk_format">Visibility</label>
+                        <span class="help-block"></span>
+                        <div class="input">
+                            <p><% if ((model.get("visibility") === "public") || model.get("is_public") === true){%>
+                                Public
+                                <%}
+                            else {%>
+                                Private
+                            <%}%></p>
+                        </div>
+                    </div>
+                    <!--<div class="control-group form-field clearfix">
+                        <label for="id_public">Public</label>
+                        <div class="input">
+                          <input type="checkbox" name="public" id="id_public" style="width:initial" <% if ((model.get("visibility") === "public") || model.get("is_public") === true){%>checked<%}%>>
+                        </div>
+                      </div>-->
+                </fieldset>
+            </div>
+            <div class="right">
+                <h3>Description</h3>
+                <p>
+                    From here you can modify different properties of an image.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="mandatoryMess">* Mandatory fields.</p>
+            <input id="image_update" class="btn btn-blue pull-right" type="submit" value="Edit Image">
+            <a id="cancelBtn" class="btn secondary cancel close">Cancel</a>
+        </div>
+    </form>
+</div>
+</script>

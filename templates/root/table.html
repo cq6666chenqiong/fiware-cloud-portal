@@ -1,0 +1,242 @@
+<script id="tableTemplate" type="text/html">
+<!--
+Description: Table
+src: templates/root/table.html
+-->
+<div class="table_container">
+<div class='table_header <%=actionsClass%>'>
+    <div class="table_actions clearfix">
+        <%
+          var checkbox_enabled = false;
+          var checkbox_size = "0%";
+          var dropdown_buttons_class = dropdown_buttons_class || undefined;
+
+          for (var header_idx in headers) {
+              var header = headers[header_idx];
+              if (header.type === "checkbox") {
+                checkbox_enabled = true;
+                checkbox_size = header.size;
+              }
+          }
+
+          for (var btn_idx in main_buttons) {
+            var main_button = main_buttons[btn_idx];
+            if (main_button.url) {
+        %>
+            <a href='<%=main_button.url%>'  class="btn btn-small btn-blue btn_action <%= (main_button.cssclass) ? main_button.cssclass:''%>" data-i18n="<%=main_button.label%>"><%=main_button.label%></a>
+            <% } else { %>
+            <button id="<%=btn_idx%>_<%=cid%>_main" class="btn btn-small btn-blue btn-main btn-main-<%=cid%> <%= (main_button.cssclass) ? main_button.cssclass:''%>" data-i18n="<%=main_button.label%>"><%=main_button.label%></button>
+        <%  }
+          }
+          if (dropdown_buttons.length > 0) {
+
+        %>
+
+        <div id="dropdown_actions" class="btn-group dropdown_actions_<%=cid%>">
+
+            <button class="btn btn-small btn-blue <%= (dropdown_buttons_class) ? dropdown_buttons_class: ''%>" data-toggle="dropdown" data-i18n="Actions">Actions
+            </button>
+
+            <a class="btn dropdown-toggle btn-small btn-blue <%= (dropdown_buttons_class) ? dropdown_buttons_class: ''%>" data-toggle="dropdown"> <span class="caret caret-white"></span>
+            </a>
+
+                <ul id="dropdown_options" class="dropdown-menu row_actions clearfix">
+        <%
+            for (var btn_idx in dropdown_buttons) {
+                var dropdown_button = dropdown_buttons[btn_idx];
+        %>
+                    <li class="clearfix">
+                        <button id="<%=btn_idx%>_<%=cid%>" class="btn btn-small btn-action btn-action-<%=cid%> <%=(dropdown_button.warn) ? 'btn-danger':''%>" disabled="disabled" data-i18n="<%=dropdown_button.label%>"><%=dropdown_button.label%></button>
+                    </li>
+        <%
+            }
+        %>
+                </ul>
+
+            </div>
+        <%
+          }
+        %>
+    </div>
+</div>
+
+<div class="scrollable scrollable_<%=cid%> <%=bodyClass%>">
+<div class="vp">
+<table id="table_entries" class="table table-without-margins without-borders table-striped table-scrolled ov">
+    <tbody>
+        <%
+        if (entries === 'loading') {
+        %>
+        <tr id="entries__row__loading" class="ajax-update status_down">
+        <td style="width:100%" class="">Loading items...</td>
+        </tr>
+        <%
+
+        } else {
+
+            for (var entry_idx in entries) {
+                var entry = entries[entry_idx];
+        %>
+        <tr id="entries__row__<%= entry.id %>" <% if (droppable||draggable) { %>draggable="true"<% } %> class="ajax-update status_down tr" <% if (!disableContextMenu) { %> data-toggle="context" data-target="#context-menu-<%=cid%>" style="position:relative" <% } %>>
+
+        <%
+            var offset = 0;
+            if (checkbox_enabled) {
+                offset = 1;
+        %>
+            <td style="width:<%= checkbox_size%>" class="multi_select_column entry_<%=cid%>">
+                <input id="checkbox_<%= entry.id%>" type="checkbox" name="object_ids" class="checkbox checkbox_entries checkbox_entries_<%=cid%>"  value="<%= entry.id%>" />
+                <label for="checkbox_<%= entry.id%>"></label>
+            </td>
+        <%  }
+            for (var cell_idx in entry.cells) {
+                var cell = entry.cells[cell_idx];
+                var header_idx = parseInt(cell_idx)+parseInt(offset);
+                var header = headers[header_idx];
+                if (cell.link) {
+        %>
+            <td style="width:<%=header.size%>" class="<%=(header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> entry_<%=cid%> <%= (cell.cssclass) ? cell.cssclass:''%> <%if(cell.tooltip){%> tip" data-tooltip="<%=cell.tooltip%>"<%}else{%>"<%}%>><a href="<%=cell.link%>" class="<%= (cell.cssclass) ? cell.cssclass:''%>"><%= cell.value %></a></td>
+        <%
+                } else {
+        %>
+            <td style="width:<%=header.size%>" class="<%=(header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> entry_<%=cid%> <%= (cell.cssclass) ? cell.cssclass:''%> <%if(cell.tooltip){%> tip" data-tooltip="<%=cell.tooltip%>"<%}else{%>"<%}%>><%= cell.value %></td>
+        <%
+            }
+        %>
+        <%
+            }
+        %>
+        </tr>
+        <% }
+    } %>
+    </tbody>
+    </table>
+</div>
+<div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
+</div>
+
+<table id="table_head" class="table table-bordered table-striped table-header <%=headerClass%>">
+    <thead>
+        <tr>
+            <%
+            var colNum = 0;
+            for (var header_idx in headers) {
+                var header = headers[header_idx];
+                if (header.type === "checkbox") {
+                    checkbox_enabled = true;
+                    checkbox_size = header.size;
+            %>
+                <td style="width:<%=header.size%>" class="multi_select_column">
+                    <input id="checkbox_<%= cid%>" type="checkbox" class="checkbox checkbox_all checkbox_all_<%=cid%>">
+                    <label for="checkbox_<%= cid%>"></label>
+                </td>
+            <%  } else if (header.order === 'none') {
+            %>
+                <td style="width:<%=header.size%>;" class="tip <%= (header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> <%= (header.cssclass) ? header.cssclass:''%>" data-tooltip="<%=header.tooltip%>" data-i18n="<%=header.name%>"><%=header.name%>
+                </td>
+            <%
+                colNum++;
+
+                } else {
+
+            %>
+                    <td id="header_id_<%=colNum%>" style="width:<%=header.size%>;" class="tip <%= (header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> <%= (header.cssclass) ? header.cssclass:''%>" data-tooltip="<%=header.tooltip%>">
+                    <div class="header_entry_<%=cid%> <%= (header.cssclass) ? header.cssclass:''%>" style="float:left;cursor:pointer;" data-i18n="<%=header.name%>"><%=header.name%></div>
+            <%
+
+                    if (colNum === orderBy.column) {
+            %>
+
+                    <button class="header_entry_<%=cid%> table_icon table_icon_active_<%=orderBy.direction%>"></button>
+                    </td>
+            <%
+                    } else {
+            %>
+                    <button class="header_entry_<%=cid%> table_icon table_icon_inactive"></button>
+                    </td>
+            <%
+                    }
+                    colNum++;
+                }
+            }
+            %>
+        </tr>
+    </thead>
+</table>
+<!--
+<div class="scrollable scrollable_<%=cid%> <%=bodyClass%>">
+<table id="table_entries" class="table table-without-margins without-borders table-striped table-scrolled">
+    <tbody>
+        <%
+        if (entries === 'loading') {
+        %>
+        <tr id="entries__row__loading" class="ajax-update status_down">
+        <td style="width:100%" class="">Loading items...</td>
+        </tr>
+        <%
+
+        } else {
+
+            for (var entry_idx in entries) {
+                var entry = entries[entry_idx];
+        %>
+        <tr id="entries__row__<%= entry.id %>" class="ajax-update status_down" <% if (!disableContextMenu) { %> data-toggle="context" data-target="#context-menu-<%=cid%>" style="position:relative" <% } %>>
+
+        <%
+            var offset = 0;
+            if (checkbox_enabled) {
+                offset = 1;
+        %>
+            <td style="width:<%= checkbox_size%>" class="multi_select_column entry_<%=cid%>">
+                <input id="checkbox_<%= entry.id%>" type="checkbox" name="object_ids" class="checkbox checkbox_entries checkbox_entries_<%=cid%>"  value="<%= entry.id%>" />
+                <label for="checkbox_<%= entry.id%>"></label>
+            </td>
+        <%  }
+            for (var cell_idx in entry.cells) {
+                var cell = entry.cells[cell_idx];
+                var header_idx = parseInt(cell_idx)+parseInt(offset);
+                var header = headers[header_idx];
+                if (cell.link) {
+        %>
+            <td style="width:<%=header.size%>" class="<%=(header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> entry_<%=cid%> <%= (cell.cssclass) ? cell.cssclass:''%>"><a href="<%=cell.link%>" class="<%= (cell.cssclass) ? cell.cssclass:''%>"><%= cell.value %></a></td>
+        <%
+                } else {
+        %>
+            <td style="width:<%=header.size%>" class="<%=(header.hidden_tablet) ? 'hidden-tablet':''%> <%=(header.hidden_phone) ? 'hidden-phone':''%> entry_<%=cid%> <%= (cell.cssclass) ? cell.cssclass:''%>"><%= cell.value %></td>
+        <%
+            }
+        %>
+        <%
+            }
+        %>
+        </tr>
+        <%
+            }
+        }%>
+    </tbody>
+    </table>
+</div>
+-->
+<table id="table_foot" class="table-foot table table-bordered table-striped table-without-margins <%=footerClass%>">
+    <tfoot>
+        <tr>
+            <td colspan="8"><span class="blue"><%=UTILS.i18n.pluralise("Displaying %s item", "Displaying %s items", entries.length)%></span></td>
+        </tr>
+    </tfoot>
+</table>
+<% if (!disableContextMenu) { %>
+<div id="context-menu-<%=cid%>" class="btn-group">
+  <ul class="dropdown-menu" role="menu" class="clearfix">
+    <%
+        for (var btn_idx in dropdown_buttons) {
+            var dropdown_button = dropdown_buttons[btn_idx];
+    %>
+            <li class="clearfix"><button id="<%=btn_idx%>_<%=cid%>" tabindex="-1" data-i18n="<%=dropdown_button.label%>" class="btn btn-small btn-<%=cid%> <%=(dropdown_button.warn) ? 'btn-danger':''%>"><%=dropdown_button.label%></button></li>
+    <%
+        }
+    %>
+  </ul>
+</div>
+<% } %>
+</div>
+</script>

@@ -1,0 +1,89 @@
+<script id="editUserFormTemplate" type="text/html">
+<div id="edit_user" class="modal hide in" style="display: block; ">
+    <!--
+    Description: Edit User Form
+    src: templates/forms/editUser.html
+    -->
+    <div class="modal-header">
+        <a href="#" class="close" data-dismiss="modal">×</a>
+        <h3>Edit User</h3>
+    </div>
+
+    <form id="form" onSubmit="return false;">
+        <div class="modal-body clearfix">
+
+            <div class="left">
+                <fieldset>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_name">User Name *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <input id="name" type="text" name="name" maxlength="255" value="<%= model.get('name') %>">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Email *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                            <input id="email" type="email" name="email" maxlength="255" value="<%= model.get('email') %>">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Password *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+
+                        <div id= "password" class="input">
+                        <a class="tip" data-tooltip="Show password"><img class="btn-eye" src="../../images/btn-eye.png"></a>
+
+                            <a class="tip" data-tooltip="Hide password"><img class="btn-eye-active" src="../../images/btn-eye-active.png" style="display: none; "></a>
+                            <input id="user_password" type="password" name="user_password" maxlength="255">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+                        <label for="id_description">Confirm Password *</label>
+
+                        <span class="help-block" style="display: none; "></span>
+                        <div class="input">
+                           	<input id="confirm_password" type="password" name="confirm_password" maxlength="255">
+                        </div>
+                    </div>
+
+                    <div class="control-group form-field clearfix">
+					    <label for="id_name">Primary Project</label>
+					 	<select id="project_switcher" tabindex="1" class="inline">
+                            <% console.log("Tenant ", model.get('tenantId'));
+                            for (var idx in tenants.models) {
+                                var tenant = tenants.models[idx];
+                            %>
+                            <option value="<%=tenant.get('id')%>" <% if (tenant.get('id') === model.get('tenantId')) { console.log("Ok")%> selected <% } %> ><%= tenant.get('name')%></option>
+                            <%
+                            }
+                            %>
+                        </select>
+		 			 </div>
+
+                </fieldset>
+            </div>
+            <div class="right">
+                <h3>Description</h3>
+                <p>
+                    From here you can edit the user by changing their username, email, password, and default project.
+                </p>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <p class="mandatoryMess">* Mandatory fields.</p>
+            <input type="submit" class="btn btn-blue edit-user pull-right"value="Edit User"/>
+            <a id="cancelBtn" class="close btn seconday cancel close" data-dismiss="modal">Cancel</a>
+        </div>
+    </form>
+</div>
+</script>
