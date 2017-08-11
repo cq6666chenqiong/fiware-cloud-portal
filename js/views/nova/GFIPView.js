@@ -133,13 +133,13 @@ var NovaGFIPView = Backbone.View.extend({
                 }, {
                     value:  gf_ip.get("transRules")
                 },{
-                    value:  gf_ip.get("transTarget")
+                    value:  gf_ip.get("TransTargetName")
                 },{
                     value:  gf_ip.get("elasticLimit")
                 },{
                     value:  gf_ip.get("overloadCount")
                 },{
-                    value:  gf_ip.get("status")
+                    value:  gf_ip.get("GFStatusName")
                 },{
                     value:  gf_ip.get("expire")
                 }]

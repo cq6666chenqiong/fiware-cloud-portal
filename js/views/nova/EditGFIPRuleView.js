@@ -69,6 +69,7 @@ var EditGFIPRuleView = Backbone.View.extend({
         param = param.replace(/=/g, "':'" );
         param = "({'" +param + "'})" ;
         param = eval(param);
+        //var a = $("#abc").serialize().split("%0D%0A");
         this.model.addRule(param,this);
     }
 

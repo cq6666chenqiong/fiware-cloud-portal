@@ -71,7 +71,48 @@ var GFIPLModel = Backbone.Model.extend({
             return resp.gfip;
         }
         */
+    },
+
+    getGFRegionName:function(region){
+        switch(region){
+            case "sh":
+                return "上海";
+            case "bj":
+                return "北京";
+            case "gz":
+                return "广州";
+        }
+    },
+
+    getGFStatusName: function(status){
+
+        switch(status){
+            case "idle":
+                return "正常工作中";
+            case "attacking":
+                return "正在被攻击";
+            case "blocking":
+                return "被封堵";
+            case "creating":
+                return "正常创建中";
+            case "isolate":
+                return "到期后被隔离";
+        }
+
+    },
+
+    getTransTargetName: function(transTarget){
+
+        switch(transTarget){
+            case "qcloud":
+                return "腾讯云内";
+            case "nqcloud":
+                return "腾讯云外";
+
+        }
+
     }
+
 });
 
 var GFIPLModels = Backbone.Collection.extend({
@@ -93,14 +134,59 @@ var GFIPLModels = Backbone.Collection.extend({
 
     sync: function(method, model, options) {
         if (method === "read") {
-            //JSTACK.Nova.getfloatingIPs(options.success, options.error, this.getRegion());
             OTHERCLOUD.API.getGFIPList(model, options.success, options.error, this.getRegion());
         }
     },
 
     parse: function(resp) {
-        return resp.gfips;
-    }
 
+        resp.gfips.forEach(function(instance){
+            instance.GFRegionName = this.getGFRegionName(instance.region);
+            instance.GFStatusName = this.getGFStatusName(instance.status);
+            instance.TransTargetName = this.getTransTargetName(instance.transTarget);
+        });
+
+        return resp.gfips;
+    },
+
+    getGFRegionName:function(region){
+        switch(region){
+            case "sh":
+                return "上海";
+            case "bj":
+                return "北京";
+            case "gz":
+                return "广州";
+        }
+    },
+
+    getGFStatusName: function(status){
+
+        switch(status){
+            case "idle":
+                return "正常工作中";
+            case "attacking":
+                return "正在被攻击";
+            case "blocking":
+                return "被封堵";
+            case "creating":
+                return "正常创建中";
+            case "isolate":
+                return "到期后被隔离";
+        }
+
+    },
+
+    getTransTargetName: function(transTarget){
+
+        switch(transTarget){
+            case "qcloud":
+                return "腾讯云内";
+            case "nqcloud":
+                return "腾讯云外";
+
+        }
+
+    }
 
 });
