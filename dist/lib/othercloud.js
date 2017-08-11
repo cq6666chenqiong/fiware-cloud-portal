@@ -170,6 +170,60 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
           callback(JSON.parse(resp));
         },callbackError);
     }
+
+
+    //获取高仿ip列表
+    var getGFIPList = function(model,callback,callbackError){
+        sendRequest('GET',
+            '/gfip/list',
+            undefined,
+            function(resp){
+              callback(JSON.parse(resp));
+            },callbackError);
+    };
+
+    //修改高仿ip信息
+    var updateGFIPInfo = function(model,callback,callbackError,options){
+        sendRequest('POST',
+            '/gfip/update',
+            JSON.stringify(options.context),
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    };
+
+    //获取高仿ip规则列表
+    var getRuleList = function(model,callback,callbackError,options){
+        sendRequest('GET',
+            '/gfipRule/list?bgpId='+options.parent_id,
+            undefined,
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    };
+
+    //删除高仿ip规则
+    var delRule = function(model,callback,callbackError,options){
+        var p = {};
+        p.ruleId = options.ruleId;
+        sendRequest('POST',
+            '/gfipRule/del',
+            JSON.stringify(p),
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    };
+
+    //增加高仿ip规则
+    var addRule = function(model,callback,callbackError,options){
+        sendRequest('POST',
+            '/gfipRule/add',
+            JSON.stringify(options.context),
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    };
+
   
     return {
             getRegion:getRegion,
@@ -187,6 +241,11 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
             describeSecurityGroup:describeSecurityGroup,
             createSecurityGroup:createSecurityGroup,
             delSecurityGroup:delSecurityGroup,
-            describeSecurityGroupDetail:describeSecurityGroupDetail
+            describeSecurityGroupDetail:describeSecurityGroupDetail,
+        getGFIPList:getGFIPList,
+        getRuleList:getRuleList,
+        delRule:delRule,
+        addRule:addRule,
+        updateGFIPInfo:updateGFIPInfo
            };
 }(OTHERCLOUD));

@@ -80,7 +80,7 @@ app.use (function(req, res, next) {
 
     var data='';
     req.setEncoding('utf8');
-    req.on('data', function(chunk) { 
+    req.on('data', function(chunk) {
        data += chunk;
     });
 
@@ -349,12 +349,12 @@ if (useIDM) {
         } else {
             res.redirect("/#token=" + tok + "&expires=" + req.cookies.expires_in);
         }
-        
+
     });
 
     app.get('/login', function(req, res){
 
-       
+
         oauth_client.getOAuthAccessToken(
             req.query.code,
             function (e, results){
@@ -395,7 +395,7 @@ app.all('/:reg/:service/:v/*', function(req, resp) {
     if (req.params.v === 'swift') {
         new_url = req.url.split('swift/v1')[1];
     }
-    
+
     var options = {
         url: endp + new_url,
         method: req.method,
@@ -579,7 +579,7 @@ app.get('/cloud',function(req, res) {
 	console.log(e);
         res.redirect('/');
     }
-    else { 
+    else {
         console.log(response);
         var capi = new Capi({
                 SecretId: config.qcloud.SecretIdc,
@@ -615,11 +615,11 @@ app.all('/cloud/:id/stop',function(req,resp){
                 SecretKey: config.qcloud.SecretKeyc,
                 serviceType: 'account'
     })
-    
+
     capi.request({
             Region: 'bj',
             Action: 'StopInstances',
-            'instanceIds.0': req.params.id 
+            'instanceIds.0': req.params.id
     }, {
              serviceType: 'cvm'
     }, function(error, data) {
@@ -660,10 +660,6 @@ app.all('/cloud/:id/start',function(req,resp){
 });
 
 
-app.all('/*', function(req, res) {
-    console.log("------ Unknown request ", req.url);
-});
-
 app.all('/user/:token', function(req, resp) {
 
     if (config.time_stats_logger) {
@@ -680,6 +676,150 @@ app.all('/user/:token', function(req, resp) {
 
     sendData("https", options, undefined, resp);
 });
+
+
+//高仿ip列表
+app.get('/gfip/list',function(req,resp){
+    /*
+    id	bgpip-000001	String	高防IP的资源ID
+    lbid	lb-xxxxxxxx	String	负载均衡IP的资源ID，只有高防IP是云内IP时才有该字段
+    name	80Gbps	String	高防IP的名称，由用户自定义
+    region	"gz/sh/bj"	String	高防IP的地域，目前有三个地区：gz:广州 sh:上海bj:北京
+    boundIP	1.2.3.4	String	高防IP的IP地址
+    bandwidth	10000Mbps	Integer	高防IP的防护带宽
+    elasticLimit	10000Mbps	Integer	弹性防护的阈值，超过该阈值后IP将被封堵
+    overloadCount	100	Integer	该高防IP被攻击超峰次数
+
+    ----
+    status	idle
+    attacking
+    blocking
+    creating
+    isolate	String	高防IP的状态： idle:正常工作中
+    attacking:正在被攻击
+    blocking:被封堵
+    creating:正常创建中
+    isolate:到期后被隔离
+    ----
+
+    expire	2016-03-02 01:23:45	Time	高防IP的到期时间
+    locked	yes/no	String	是否被锁
+    ---
+    transTarget	qcloud
+    nqcloud	String	高防IP的转发目标
+    qcloud:腾讯云内
+    nqcloud:腾讯云外
+    ----
+
+    transRules	12	Integer	该高防IP配置的转发规则数
+    */
+
+
+    console.log("get get my       ");
+
+    var result = {gfips:[
+        {"id":"bgpip-000001","lbid":"lb-xxxxxxxx1","name":"80Gbps","region":"gz",
+            "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
+            "status":"idle","expire":"2016-03-02 01:23:45","locked":"yes","transTarget":"nqcloud","transRules":12},
+        {"id":"bgpip-000002","lbid":"lb-xxxxxxxx2","name":"160Gbps","region":"sh",
+            "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
+            "status":"idle","expire":"2016-03-02 01:23:45","locked":"yes","transTarget":"nqcloud","transRules":12},
+    ]};
+
+    resp.send(JSON.stringify(result));
+
+});
+
+
+//高仿ip列表
+app.get('/gfipRule/list',function(req,resp){
+
+
+    /**
+     *
+     total	123	Integer	该高防IP共配置过多少条转发规则
+     transRules	[obj,…]	Array	攻击详情数组，数组元素如下：
+     {
+           "id": "rule-00000001",
+           "protocol": "TCP"
+           "virtualPort": "80",
+           "sourcePort": "80",
+           "ipList": "1.2.3.4；1.1.1.1"
+     }
+     id	rule-00000001	String	该转发规则的ID
+     protocol	TCP	String	转发规则所用协议，目前只支持TCP
+     virtualPort	80	Integer	转发端口
+     sourcePort	80	Integer	源站端口
+     ipList	"1.2.3.4；1.1.1.1"	String	要转发到机器的IP列表，一条规则不超过20个IP
+     */
+
+
+    var result = {gfipRules:[
+        {"id":"rule-00000001","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.4；1.1.1.1"},
+        {"id":"rule-00000002","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；2.2.2.2"},
+    ]};
+
+
+
+    resp.send(JSON.stringify(result));
+});
+
+
+//删除高仿ip规则
+app.post("/gfipRule/del",function(req,resp){
+    //var id = req.body.ruleId;
+    var json = JSON.parse(req.body);
+    var id = json.ruleId;
+    console.info("del rule       "+id);
+    console.info("del rule       "+JSON.stringify(req.params));
+    console.info("del rule       "+JSON.stringify(req.query));
+    console.info("del rule       "+JSON.stringify(req.body));
+    console.info("del rule       "+req.body);
+
+    var result = {gfipRules:[
+        {"id":"rule-00000001","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.4；1.1.1.1"},
+        {"id":"rule-00000002","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；2.2.2.2"},
+    ]};
+
+    result.gfipRules.splice(0,1);
+    console.info("res       "+JSON.stringify(result));
+    resp.send(JSON.stringify(result));
+});
+
+//修改高仿ip
+app.post("/gfip/update",function(req,resp){
+    var json = JSON.parse(req.body);
+    var result = {"gfip":{}};
+    result.gfip = json;
+    console.info("res    update   "+JSON.stringify(json));
+    resp.send(JSON.stringify(json));
+});
+
+
+//增加高仿ip规则
+app.post("/gfipRule/add",function(req,resp){
+    //var id = req.body.ruleId;
+    var json = JSON.parse(req.body);
+
+    console.info("res    ss   "+JSON.stringify(json));
+    var result = {gfipRules:[
+        {"id":"rule-00000001","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.4；1.1.1.1"},
+        {"id":"rule-00000002","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；2.2.2.2"},
+    ]};
+
+    result.gfipRules.push(json);
+    console.info("res    ss   "+JSON.stringify(result));
+    resp.send(JSON.stringify(result));
+});
+
+
+
+app.all('/*', function(req, res) {
+    console.log("------ Unknown request ", req.url);
+});
+
+
+
 
 var catalog_interval;
 
@@ -723,7 +863,7 @@ function getCatalog(chained) {
                 },
                 "tenantId": keystone_config.tenantId
             }
-        };        
+        };
     }
 
 
@@ -754,7 +894,7 @@ function getCatalog(chained) {
 
 function getEndpoint (service, region) {
     var serv, endpoint;
-    
+
     for (var s in service_catalog) {
         if (service_catalog[s].type === service) {
             serv = service_catalog[s];
@@ -784,7 +924,7 @@ function getEndpoint (service, region) {
         return endpoint.split('/AUTH_' + keystone_config.tenantId)[0];
     }
     var end = endpoint;
-    
+
     if (end.charAt(end.length-1) === "/") {
         end = end.substring(0, end.length-1);
     }
@@ -804,7 +944,7 @@ function encrypt(str){
   crypted += cipher.final('hex');
   return crypted;
 }
- 
+
 function decrypt(str){
   var decipher = crypto.createDecipher('aes-256-cbc',secret);
   var dec = decipher.update(str,'hex','utf8');

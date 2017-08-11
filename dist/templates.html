@@ -4199,12 +4199,16 @@ src: templates/root/nova/accessAndSecurity.html
     <li class="">
     <a href="#keypairs" data-toggle="tab">密钥对</a>
     </li>
+     <li class="">
+    <a href="#gf_ips" data-toggle="tab">新高仿ip</a>
+    </li>
 </ul>
 
 <div id="" class="tab-content tab-content-adjustable">
 	<div id="floating_ips" class="tab-pane tab-adjustable active"></div>
 	<div id="security_groups" class="tab-pane tab-adjustable fade"></div>
 	<div id="keypairs" class="tab-pane tab-adjustable fade"></div>
+    <div id="gf_ips" class="tab-pane tab-adjustable fade"></div>
 </div>
 
 </script>
@@ -4372,6 +4376,100 @@ src: templates/root/nova/blueprint/software.html
 -->
 <div id="software-table"></div>
 </script>
+<script id="editGaoFangIPInfoTemplate" type="text/html">
+        <form id="form_gaofangipInfo" onSubmit="return false;">
+            <div id="editGaoFangipInfo" class="modal hide">
+                <div class="modal-header">
+                    <a id="closeModal" href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h5>修改高仿ip信息</h5>
+                </div>
+                <div class="modal-body clearfix">
+                    <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+                        <tr><td>ip名称:</td><td><input name="id" value='<%= model.get("id") %>' /></td></tr>
+                        <tr><td>ip</td><td><input name="boundIP" value='<%= model.get("boundIP") %>' /></td></tr>
+                        <tr><td>所在地区</td><td><input name="region" value='<%= model.get("region") %>' /></td></tr>
+                        <tr><td>DDos保底峰值</td><td><input name="id" value='<%= model.get("id") %>' /></td></tr>
+                        <tr><td>CC防护峰值</td><td><input name="id" value='<%= model.get("id") %>' /></td></tr>
+                        <tr><td>当前状态</td><td><input name="status" value='<%= model.get("status") %>' /></td></tr>
+                        <tr><td>到期时间</td><td><input name="expire" disabled=disabled value='<%= model.get("expire") %>' /></td></tr>
+                    </table>
+                </div>
+                <div class="modal-body clearfix" style="border-top: 1px solid #f5f5f5">
+                    <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+                        <tr><td>当前状态:</td><td>
+                            <select name="cc_start" style="width: 50%">
+                                <option value="1">开启</option>
+                                <option value="0">未开启</option>
+                            </select>
+                        </td></tr>
+                        <tr><td></td><td>想要提升防御可免费开启弹性防护</td></tr>
+                    </table>
+                </div>
+                <div class="modal-body clearfix" style="border-top: 1px solid #f5f5f5">
+                    <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+                        <tr><td>http请求阀值:</td><td>
+                            <select name="fazhi" style="width: 50%">
+                                <option value="240">240Qag</option>
+                                <option value="0">未开启</option>
+                            </select>
+                        </td></tr>
+                        <tr><td></td><td>当http请求数超过设定值时,触发CC防护</td></tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-blue pull-right" value="修改"  >
+                    <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+        </form>
+</script>
+
+<script id="editGFIPRuleTemplate" type="text/html">
+    <div id="edit_rule" class="modal hide">
+        <div class="modal-header">
+            <a id="closeModal" href="#" class="close" data-dismiss="modal">&times;</a>
+            <h3>修改高仿ip信息</h3>
+        </div>
+        <div class="modal-body clearfix">
+            <div id="iprule-table"></div>
+        </div>
+        <form id="gfipRule_form" onsubmit="return false" style="border-top: 1px solid #f5f5f5">
+            <div class="modal-body clearfix">
+                <h5>增加规则</h5>
+                <table class="table table-without-margins without-borders table-striped table-scrolled ov" >
+                    <tr>
+                        <td >协议</td>
+                        <td >转发端口</td>
+                        <td >源站端口</td>
+                        <td >源IPs</td>
+                    </tr>
+                    <tr>
+                        <td>
+                          * <select name="protocol" style="width: 80%" required >
+                                <option value="udp">udp</option>
+                                <option value="tcp">tcp</option>
+                            </select>
+                        </td>
+                        <td>
+                            *<input  name="virtualPort" required style="width: 80%" placeholder="必填" />
+                        </td>
+                        <td>
+                           * <input  name="sourcePort" required style="width: 80%" placeholder="必填" />
+                        </td>
+                        <td>
+                            <textarea rows="3" cols="20" name="ipList" style="width: 80%" ></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" id="gfipRule_add" class="btn btn-blue pull-right" value="增加"  >
+                <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">返回</a>
+            </div>
+        </form>
+    </div>
+</script>
+
 <script id="novaFloatingIPsTemplate" type="text/html">
 <!--
 Description: Floating IPs
@@ -4413,6 +4511,68 @@ src: templates/root/nova/gaoFangIPs.html
 <div id="gaoFangIPs-table"></div>
 </script>
 
+<script id="gfipInfoTemplate" type="text/html">
+    <div id="gfip_info" class="modal hide">
+            <div class="modal-header">
+                <a id="closeModal" href="#" class="close fade" data-dismiss="modal">&times;</a>
+                <h3>高仿IP详情</h3>
+            </div>
+            <div class="modal-body clearfix">
+                <table class="table table-without-margins without-borders table-striped table-scrolled ov" >
+                    <tr><td>ip名称:</td><td><%= model.get("id") %></td></tr>
+                    <tr><td>ip:</td><td><%= model.get("boundIP") %></td></tr>
+                    <tr><td>所在地区:</td><td><%= model.get("region") %></td></tr>
+                    <tr><td>DDos保底峰值:</td><td><%= model.get("id") %></td></tr>
+                    <tr><td>CC防护峰值:</td><td><%= model.get("id") %></td></tr>
+                    <tr><td>当前状态:</td><td><%= model.get("status") %></td></tr>
+                    <tr><td>到期时间:</td><td><%= model.get("expire") %></td></tr>
+                </table>
+            </div>
+            <div class="modal-body clearfix" style="border-top: 1px solid #f5f5f5">
+                <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+                    <tr><td>当前状态:</td><td>
+                        开启
+                    </td></tr>
+                    <tr><td></td><td>想要提升防御可免费开启弹性防护</td></tr>
+                </table>
+            </div>
+            <div class="modal-body clearfix" style="border-top: 1px solid #f5f5f5">
+                <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+                    <tr><td>CC防护:</td><td>
+                        开启
+                    </td></tr>
+                    <tr><td>http请求阀值:</td><td>
+                        240 QPSS
+                    </td></tr>
+                    <tr><td></td><td>当http请求数超过设定值时,触发CC防护</td></tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">Cancel</a>
+            </div>
+    </div>
+</script>
+<script id="gfiplistTemplate" type="text/html">
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#gf_ips" data-toggle="tab">高防IP</a>
+        </li>
+    </ul>
+
+    <div id="" class="tab-content tab-content-adjustable">
+        <div id="gf_ips" class="tab-pane tab-adjustable active"></div>
+    </div>
+</script>
+<script id="novaGFIPTableTemplate" type="text/html">
+    <!--
+    Description: Floating IPs
+    src: templates/root/nova/floatingIPs.html
+    -->
+    <div id="gfips-table">
+
+    </div>
+
+</script>
 <script id="consultImageDetailFormTemplate" type="text/html">
 <div id="consult_image" class="help_page">
     <!--
@@ -5632,6 +5792,21 @@ src: templates/root/sideBar.html
 
 </script>
 
+<script id="smalltableTemplate" type="text/html">
+    <div class="table_container">
+        <h5><%= title%></h5>
+        <table class="table table-bordered table-striped table-header">
+            <thead>
+            <%= table_header %>
+            </thead>
+        </table>
+        <table class="table table-without-margins without-borders table-striped table-scrolled ov">
+           <tbody>
+           <%= table_body %>
+           </tbody>
+        </table>
+    </div>
+</script>
 <script id="flavorsTemplate" type="text/html">
 <!--
 Description: Flavors

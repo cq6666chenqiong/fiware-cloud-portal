@@ -6,9 +6,9 @@ config.process_group = '';
 // nav bar portals
 config.fiportals = {
     // Mandatory portals
-    'Cloud': 'http://124.251.62.216',
-    'Account': 'http://124.251.62.217:8000',
-    'Help&info': 'http://124.251.62.216'
+    'Cloud': 'http://192.168.87.152',
+    'Account': 'http://192.168.87.152:8000',
+    'Help&info': 'http://192.168.87.152'
     // Another portals
     //,'': ''
 };
@@ -28,50 +28,34 @@ config.useIDM = true;
 
 // OAuth configuration. Only set this configuration if useIDM is true.
 config.oauth = {
-    account_server: 'http://192.168.87.152:8000',
-    client_id: 'f6f1e9bda1144b5185539672c09c5541',
-    client_secret: '10b12a87af2b4e0890a10d19d8b6bb11',
-    callbackURL: 'http://192.168.87.154:8000/login'
-};
-
-config.productAdminOauth = {
-    client_id: '9c9bca6d26234ff98fb93df3e3d065c5',
-    client_secret: 'e1396a545ace426a941c0edfd3403d0f',
-    username:'laoguo.cn@gmail.com',
-    password:'12345',
-    grant_type : 'password'
+    account_server: 'http://10.20.200.62:8000',
+    client_id: 'b04e93dc7b5141119a68e9145605dc6d',
+    client_secret: 'ed70958d0e67405fb76939dce2812671',
+    callbackURL: 'http://192.168.5.176:8000/login'
 };
 
 // Keystone configuration.
 config.keystone = {
-    version: 3,
-    host: '192.168.87.152',
-    port: '5000',
-    admin_host: '192.168.87.152',
-    admin_port: '35357',
-    username: '21192900@qq.com',
-    password: 'qaz123',
-    tenantId: '',
-
+        version: 3,
+	host: '10.20.200.62',
+	port: '5000',
+	admin_host: '10.20.200.62',
+	admin_port: '35357',
+	username: 'cloud@21vianet.com',
+	password: 'cloud',
+	tenantId: '',
 };
 
 //qcloud account
 config.qcloud = {
+//        SecretId: 'AKIDJUTGrGYTQAlGvRoBKJ8mEbmnMp7LnRDn',
+//        SecretKey: 'hEammaiiXTGzXv9C9zdIrXO4Zs21xAD8',
         SecretId: 'AKID2sYy826AMHzTjoMHemobCcXHm47vLoul',
         SecretKey: 'mLjxwgDVebNtEKEvPeePuBCxTjlopfGg',
 };
 
 config.delivery  = {
-        baseUrl:'http://192.168.87.1:3002'
-}
-
-config.qcloud.projectId = '1057374'; //for create keypair
-
-config.qcloud.region = {
-    '北京':'ap-beijing',
-    '上海':'ap-shanghai',
-    '广州':'ap-guangzhou',
-    '深圳':'ap-shenzhen'
+	baseUrl:'http://192.168.87.152:3000'
 }
 
 config.time_stats_logger = false;

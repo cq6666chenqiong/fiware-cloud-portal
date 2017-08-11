@@ -2978,8 +2978,7 @@ var EditSecurityGroupRulesView = Backbone.View.extend({
         console.log(this.options.securityGroupId);
         console.log(securityGroupsModel);
         var securityGroupRules;
-        securityGroupsModel.readSecurityGroupRuleDetails();
-        for (var i in securityGroupsModel.get('rules')) {
+/*        for (var i in securityGroupsModel.get('rules')) {
             securityGroupRules = securityGroupsModel.get('rules')[i];
             if (securityGroupRules.from_port === null || securityGroupRules.ip_protocol === null) {
                 continue;
@@ -2990,6 +2989,41 @@ var EditSecurityGroupRulesView = Backbone.View.extend({
                     value: securityGroupRules.ip_protocol.toUpperCase()
                 }, {
                     value: securityGroupRules.from_port
+                }, {
+                    value: securityGroupRules.to_port
+                }, {
+                    value: securityGroupRules.group.name !== undefined ? securityGroupRules.group.name : securityGroupRules.ip_range.cidr+" (CIDR)"
+                }, {
+                    value: '<button type="button" id="deleteRuleBtn" value="' + securityGroupRules.id + '" class="ajax-modal btn btn-small btn-blue btn-delete btn-danger"  data-i18n="Delete Rule">Delete Rule</button>'
+                }]
+            };
+            entries.push(entry);
+        }*/
+
+        for (var i in securityGroupsModel.get('ingress')) {
+            securityGroupRules = securityGroupsModel.get('ingress')[i];
+
+            if(securityGroupRules.portRange.split(',')[1] != undefined) {
+                console.log(", 格式");
+            }else if(securityGroupRules.portRange.split('-')[1] != undefined){
+                console.log("range");
+            }else {
+                console.log("unkown format");
+            }
+
+
+            if (securityGroupRules.portRange === null || securityGroupRules.ipProtocol === null) {
+                continue;
+            }
+
+            var from_port = securityGroupRules.portRange.split('-')[0];
+
+            var entry = {
+                id: securityGroupRules.id,
+                cells: [{
+                    value: securityGroupRules.ipProtocol.toUpperCase()
+                }, {
+                    value: securityGroupRules.portRange.split()
                 }, {
                     value: securityGroupRules.to_port
                 }, {
@@ -6979,12 +7013,15 @@ var AccessAndSecurityView = Backbone.View.extend({
     keypairsView: undefined,
     securityGroupsView: undefined,
     floatingIPsView: undefined,
+    newGFIPView:undefined,
 
     initialize: function() {
         this.render();
         this.floatingIPsView = new NovaFloatingIPsView({model: UTILS.GlobalModels.get("floatingIPsModel"), el: '#floating_ips'});
         this.secuirtyGroupsView = new NovaSecurityGroupsView({model: UTILS.GlobalModels.get("securityGroupsModel"), el: '#security_groups'});
         this.keyparisView = new NovaKeypairsView({model: UTILS.GlobalModels.get("keypairsModel"), el: '#keypairs'});
+        this.newGFIPView = new NovaGFIPView({model: UTILS.GlobalModels.get("gFIPLModels"), el: '#gf_ips'});
+
     },
 
     close: function(e) {
@@ -8873,6 +8910,129 @@ var SoftwareView = Backbone.View.extend({
     }
 
 });
+var EditGFIPInfoView = Backbone.View.extend({
+
+    _template: _.itemplate($('#editGaoFangIPInfoTemplate').html()),
+
+    events: {
+        'click #cancelCreateBtn': 'close',
+        'click .close': 'close',
+        'submit #form_gaofangipInfo': 'updateGFIPInfo'
+        //'click .modal-backdrop': 'close'
+    },
+
+    proRender:function(){
+        while($('#edit_info').html()!=null||$('.modal-backdrop').html()!=null){
+            $('#edit_info').remove();
+            $('.modal-backdrop').remove();
+        }
+        this.render();
+    },
+
+    render: function () {
+        $(this.el).append(this._template({ model: this.model}));
+        $('.modal:last').modal();
+        return this;
+    },
+
+    close: function(e) {
+        $('#edit_info').remove();
+        $('.modal-backdrop').remove();
+        this.onClose();
+    },
+
+    onClose: function () {
+        this.undelegateEvents();
+        this.unbind();
+    },
+
+    updateGFIPInfo: function() {
+        var context = $('#form_gaofangipInfo').serialize();
+        context = decodeURIComponent(context,true);
+        context = context.replace(/&/g, "','" );
+        context = context.replace(/=/g, "':'" );
+        context = "({'" +context + "'})" ;
+        var p = eval(context);
+        this.model.updateInfo(p,this);
+    }
+})
+
+
+var EditGFIPRuleView = Backbone.View.extend({
+
+    _template: _.itemplate($('#editGFIPRuleTemplate').html()),
+    tableView:undefined,
+    model_parent_id:undefined,
+
+    events: {
+        'click #cancelCreateBtn': 'close',
+        'click .close': 'close',
+        'click  #delRule':'delRule',
+        //'click .modal-backdrop': 'close',
+        'click #gfipRule_add': 'addRule'
+    },
+
+    initialize: function() {
+
+        this.model = new GFIPRuleModels();
+
+    },
+
+    getList:function(parent_id){
+        this.model.getRuleList(parent_id,this);
+    },
+
+    proRender: function(){
+        $('#edit_rule').remove();
+        $('.modal-backdrop').remove();
+        this.render();
+    },
+
+    delRule:function(e){
+        alert($(e.target).attr("attrId"));
+        var ruleId = $(e.target).attr("attrId");
+        this.model.delRule(ruleId,this);
+    },
+
+    render: function () {
+        this.options.quotas = UTILS.GlobalModels.get("quotas");
+        $(this.el).append(this._template({ model: this.model}));
+        $('.modal:last').modal();
+        var header = {"id":"id","protocol":"协议","virtualPort":"转发端口","sourcePort":"源站端口","ipList":"源IPs","operate":"操作"};
+        this.tableView = new SmalltableView({
+            el: '#iprule-table',
+            model: this.model,
+            context: this
+        });
+        this.tableView.header = header;
+        this.tableView.hasId = false;
+        this.tableView.title = "规则列表";
+        this.tableView.render();
+
+        return this;
+    },
+
+    close: function(e) {
+        $('#edit_rule').remove();
+        $('.modal-backdrop').remove();
+        this.onClose();
+    },
+
+    onClose: function () {
+        this.undelegateEvents();
+        this.unbind();
+    },
+
+    addRule: function() {
+        var param = $('#gfipRule_form').serialize();
+        param = param.replace(/&/g, "','" );
+        param = param.replace(/=/g, "':'" );
+        param = "({'" +param + "'})" ;
+        param = eval(param);
+        this.model.addRule(param,this);
+    }
+
+});
 var NovaFloatingIPsView = Backbone.View.extend({
 
     _template: _.itemplate($('#novaFloatingIPsTemplate').html()),
@@ -9380,6 +9540,320 @@ var GaoFangIPView = Backbone.View.extend({
 
     }
 
+});
+
+var GFIPInfoView = Backbone.View.extend({
+
+    _template: _.itemplate($('#gfipInfoTemplate').html()),
+
+    events: {
+        'click #cancelCreateBtn': 'close',
+        'click .close': 'close'
+        //'click .modal-backdrop': 'close'
+    },
+
+    initialize: function() {
+        /*
+        this.model.bind("change", this.render, this);
+        this.model.fetch();
+        */
+    },
+
+    render: function () {
+        $(this.el).append(this._template({ model: this.model}));
+        $('.modal:last').modal();
+        return this;
+    },
+
+    close: function(e) {
+        $('#gfip_info').remove();
+        $('.modal-backdrop').remove();
+        this.onClose();
+    },
+
+    onClose: function () {
+        this.undelegateEvents();
+        this.unbind();
+    }
+
+});
+var GFIPListView = Backbone.View.extend({
+
+    _template: _.itemplate($('#gfiplistTemplate').html()),
+
+    keypairsView: undefined,
+    securityGroupsView: undefined,
+    floatingIPsView: undefined,
+
+    initialize: function() {
+        this.render();
+        this.floatingIPsView = new NovaGFIPView({model: UTILS.GlobalModels.get("gFIPLModels"), el: '#gf_ips'});
+    },
+
+    close: function(e) {
+        this.undelegateEvents();
+        this.unbind();
+    },
+
+    onClose: function() {
+        this.keyparisView.close();
+        this.secuirtyGroupsView.close();
+        this.floatingIPsView.close();
+        this.undelegateEvents();
+        this.unbind();
+    },
+
+    render: function() {
+        var self = this;
+        UTILS.Render.animateRender(this.el, this._template);
+
+    }
+
+});
+
+var NovaGFIPView = Backbone.View.extend({
+
+    _template: _.itemplate($('#novaGFIPTableTemplate').html()),
+
+    tableView: undefined,
+
+    initialize: function() {
+        this.options.pools = UTILS.GlobalModels.get("novaGFIPModel");
+        this.options.instances = UTILS.GlobalModels.get("instancesModel");
+        this.model.unbind("sync");
+        this.model.bind("sync", this.render, this);
+        //this.model.bind("sync", this.renderFirst, this);
+        this.renderFirst();
+    },
+
+
+    getOneSelectedID: function(){
+        if(this.tableView.getSelectedEntries().length == 1)
+            return this.tableView.getSelectedEntries()[0];
+        else return undefined;
+    },
+
+    getMainButtons: function() {
+        var btns = [];
+        UTILS.GlobalModels.get("quotas");
+
+        btns.push({
+            //label:  "Allocate IP to Project",
+            label:  "详情",
+            action: "detail"
+        });
+        return btns;
+    },
+
+    getDropdownButtons: function() {
+        var self = this;
+        var btns = [];
+        var oneSelected = function(size, id) {
+            if (size === 1) {
+                return true;
+            }
+        };
+        btns.push ({
+                label: "修改高仿ip信息",
+                action: "editInfo",
+                activatePattern: oneSelected
+            },  {
+                label: "修改高仿ip规则",
+                action: "editRule",
+                activatePattern: oneSelected
+            }
+        );
+        return btns;
+    },
+
+    getHeaders: function() {
+        var btns = [
+            {
+                name: "ID/名称",
+                tooltip: "IP Address",
+                size: "15%",
+                hidden_phone: false,
+                hidden_tablet: false
+            },
+            {
+                name: "高防IP",
+                tooltip: "Instance the IP is attached to",
+                size: "10%",
+                hidden_phone: true,
+                hidden_tablet: false
+            },
+            {
+                name: "转发规则数",
+                tooltip: "Fixed address the IP is attached to",
+                size: "10%",
+                hidden_phone: true,
+                hidden_tablet: false
+            },
+            {
+                name: "转发目标",
+                tooltip: "Corresponding Floating Pool",
+                size: "15%",
+                hidden_phone: false,
+                hidden_tablet: false
+            },
+            {
+                name: "保底防护峰值",
+                tooltip: "Fixed address the IP is attached to",
+                size: "15%",
+                hidden_phone: true,
+                hidden_tablet: false
+            },
+            {
+                name: "超峰次数",
+                tooltip: "Fixed address the IP is attached to",
+                size: "15%",
+                hidden_phone: true,
+                hidden_tablet: false
+            },
+            {
+                name: "运行状态",
+                tooltip: "Fixed address the IP is attached to",
+                size: "15%",
+                hidden_phone: true,
+                hidden_tablet: false
+            },
+            {
+                name: "到期时间",
+                tooltip: "Fixed address the IP is attached to",
+                size: "25%",
+                hidden_phone: true,
+                hidden_tablet: false
+            }];
+
+        btns.splice(0,0, {
+            type: "checkbox",
+            size: "5%"
+        });
+
+        return btns;
+    },
+
+    getEntries: function() {
+        var entries = [];
+        for (var index in this.model.models) {
+            var gf_ip = this.model.models[index];
+            var entry = {
+                id: gf_ip.get('id'),
+                cells: [{
+                    value:  gf_ip.get('id')
+                }, {
+                    value:  gf_ip.get("boundIP")
+                }, {
+                    value:  gf_ip.get("transRules")
+                },{
+                    value:  gf_ip.get("transTarget")
+                },{
+                    value:  gf_ip.get("elasticLimit")
+                },{
+                    value:  gf_ip.get("overloadCount")
+                },{
+                    value:  gf_ip.get("status")
+                },{
+                    value:  gf_ip.get("expire")
+                }]
+            };
+            entries.push(entry);
+        }
+        return entries;
+    },
+
+    onClose: function() {
+        this.tableView.close();
+        this.model.unbind("sync");
+        this.unbind();
+        this.undelegateEvents();
+    },
+
+    onAction: function(action, floatingIds) {
+
+        var subview;
+
+        switch (action) {
+            case 'detail':
+                //subview = new AllocateIPView({el: 'body', pools: this.options.pools, model: self.model});
+                if(!this.getOneSelectedID()){
+                    alert("请之选择一个高仿ip!");
+                    return;
+                }
+                var mode = null;
+                for(var i=0;i<this.model.length;i++){
+                    var t = this.model.models[i];
+                    if(t.id == this.getOneSelectedID()){
+                        mode = t;
+                        break;
+                    }
+                }
+                subview = new GFIPInfoView({el: 'body',model: mode});
+                //subview = new AllocateIPView({el: 'body', pools: this.options.pools, model: self.model});
+                subview.render();
+                break;
+            case 'editInfo':
+                //subview = new AssociateIPView({el: 'body',  model: floa, instances: this.options.instances});
+                //subview = new AssociateIPView({el: 'body',  model: floa, instances: this.options.instances});
+                if(!this.getOneSelectedID()){
+                    alert("请之选择一个高仿ip!");
+                    return;
+                }
+                var mode = null;
+                for(var i=0;i<this.model.length;i++){
+                    var t = this.model.models[i];
+                    if(t.id == this.getOneSelectedID()){
+                        mode = t;
+                        break;
+                    }
+                }
+                subview = new EditGFIPInfoView({el: 'body',model: mode});
+                subview.render();
+                break;
+            case 'editRule':
+                if(!this.getOneSelectedID()){
+                    alert("请之选择一个高仿ip!");
+                    return;
+                }
+                var mode = null;
+                for(var i=0;i<this.model.length;i++){
+                    var t = this.model.models[i];
+                    if(t.id == this.getOneSelectedID()){
+                        mode = t;
+                        break;
+                    }
+                }
+                subview = new EditGFIPRuleView({el: 'body',  model_parent_id: mode.id});
+                subview.getList(mode.id);
+                //subview.render();
+                break;
+
+        }
+    },
+
+    renderFirst: function() {
+        $(this.el).empty();
+        UTILS.Render.animateRender(this.el, this._template, {models: this.model.models, pools: this.options.pools, instances: this.options.instances});
+        this.tableView = new TableView({
+            model: this.model,
+            el: '#gfips-table',
+            onAction: this.onAction,
+            getDropdownButtons: this.getDropdownButtons,
+            getMainButtons: this.getMainButtons,
+            getHeaders: this.getHeaders,
+            getEntries: this.getEntries,
+            context: this
+        });
+        this.tableView.render();
+        return this;
+    },
+
+    render: function() {
+        if ($(this.el).html() !== null) {
+            this.tableView.render();
+        }
+        return this;
+    }
 });
 
 var ConsultImageDetailView = Backbone.View.extend({
@@ -12912,6 +13386,67 @@ var SideBarView = Backbone.View.extend({
         subview.render();
     }
 });
+var SmalltableView = Backbone.View.extend({
+
+    _template: _.itemplate($('#smalltableTemplate').html()),
+    header: undefined,
+    title: undefined,
+    hasId:true,
+
+    initialize: function() {
+
+    },
+
+    getHeader: function() {
+        var str = "<tr>";
+        for(var attr in this.header){
+            if(attr=="id"&&!this.hasId){
+                continue;
+            }
+            str = str + "<td>" + this.header[attr] + "</td>";
+        }
+        str = str + "</tr>";
+        return str;
+    },
+
+    getEntries: function(){
+        var str = "";
+        for(var i = 0;i< this.model.length;i++){
+            var str = str + "<tr>";
+            var entry = this.model.models[i];
+            for(var attr in this.header){
+                //alert(attr);
+                if(attr=="id"&&!this.hasId){
+                    str = str + "<td style=\'display: none\'>" + entry.get(attr) + "</td>";
+                }else{
+                    str = str + "<td >" + entry.get(attr) + "</td>";
+                }
+                //str = str + "<td >" + entry.get(attr) + "</td>";
+            }
+            str = str + "</tr>";
+        }
+        return str;
+    },
+
+    close: function(){
+       $("#smalltableTemplate").remove();
+       this.undelegateEvents();
+       this.unbind();
+    },
+
+    render: function() {
+        var new_template = this._template({
+            table_header:this.getHeader(),
+            table_body:this.getEntries(),
+            title: this.title
+        });
+        $(this.el).html(new_template);
+        return this;
+    }
+
+
+});
+
 var FlavorView = Backbone.View.extend({
 
     _template: _.itemplate($('#flavorsTemplate').html()),
