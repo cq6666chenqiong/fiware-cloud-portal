@@ -4451,13 +4451,13 @@ src: templates/root/nova/blueprint/software.html
                             </select>
                         </td>
                         <td>
-                            *<input  name="virtualPort" required style="width: 80%" placeholder="必填" />
+                            *<input type="number"  name="virtualPort" required style="width: 80%" placeholder="必填" />
                         </td>
                         <td>
-                           * <input  name="sourcePort" required style="width: 80%" placeholder="必填" />
+                           * <input type="number"  name="sourcePort" required style="width: 80%" placeholder="必填" />
                         </td>
                         <td>
-                            <textarea rows="3" cols="20" name="ipList" style="width: 80%" ></textarea>
+                            <textarea  type="number" rows="3" cols="20" name="ipList" style="width: 80%" ></textarea>
                         </td>
                     </tr>
                 </table>
@@ -4521,10 +4521,10 @@ src: templates/root/nova/gaoFangIPs.html
                 <table class="table table-without-margins without-borders table-striped table-scrolled ov" >
                     <tr><td>ip名称:</td><td><%= model.get("id") %></td></tr>
                     <tr><td>ip:</td><td><%= model.get("boundIP") %></td></tr>
-                    <tr><td>所在地区:</td><td><%= model.get("region") %></td></tr>
+                    <tr><td>所在地区:</td><td><%= model.get("GFRegionName") %></td></tr>
                     <tr><td>DDos保底峰值:</td><td><%= model.get("id") %></td></tr>
                     <tr><td>CC防护峰值:</td><td><%= model.get("id") %></td></tr>
-                    <tr><td>当前状态:</td><td><%= model.get("status") %></td></tr>
+                    <tr><td>当前状态:</td><td><%= model.get("GFStatusName") %></td></tr>
                     <tr><td>到期时间:</td><td><%= model.get("expire") %></td></tr>
                 </table>
             </div>

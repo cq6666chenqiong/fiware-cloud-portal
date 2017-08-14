@@ -42,6 +42,13 @@ var GFIPLModel = Backbone.Model.extend({
         return xhr;
     },
 
+    getDetailInfo: function(id,obj){
+      var options =  options || {};
+      options.id = id;
+      options.obj = obj;
+      this._action("detail",options);
+    },
+
     updateInfo: function(context,obj){
         var options = options || {};
         options.context = context;
@@ -51,7 +58,8 @@ var GFIPLModel = Backbone.Model.extend({
 
     sync: function(method, model, options) {
         switch(method) {
-            case "read":
+            case "detail":
+                OTHERCLOUD.API.getGFIPInfo(model, options.success, options.error,options, this.getRegion());
                 break;
             case "update":
                 OTHERCLOUD.API.updateGFIPInfo(model, options.success, options.error,options, this.getRegion());
@@ -140,24 +148,33 @@ var GFIPLModels = Backbone.Collection.extend({
 
     parse: function(resp) {
 
+        var options = {};
+        options.getGFRegionName = this.getGFRegionName;
+        options.getGFStatusName = this.getGFStatusName;
+        options.getTransTargetName = this.getTransTargetName;
         resp.gfips.forEach(function(instance){
-            instance.GFRegionName = this.getGFRegionName(instance.region);
-            instance.GFStatusName = this.getGFStatusName(instance.status);
-            instance.TransTargetName = this.getTransTargetName(instance.transTarget);
+           instance.GFRegionName = options.getGFRegionName(instance.region);
+           instance.GFStatusName = options.getGFStatusName(instance.status);
+           instance.TransTargetName = options.getTransTargetName(instance.transTarget);
         });
-
         return resp.gfips;
+
     },
 
     getGFRegionName:function(region){
+        var name = "";
         switch(region){
             case "sh":
-                return "上海";
+                name = "上海";
+                break;
             case "bj":
-                return "北京";
+                name = "北京";
+                break;
             case "gz":
-                return "广州";
+                name = "广州";
+                break;
         }
+        return name;
     },
 
     getGFStatusName: function(status){

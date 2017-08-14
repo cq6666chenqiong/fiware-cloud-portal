@@ -15,6 +15,7 @@ var qs = require("qs");
 
 var users = require('./routes/users');
 var qcloud = require('./routes/qcloud');
+var Promise = require('bluebird');
 
 var oauth_config = config.oauth;
 var useIDM = config.useIDM;
@@ -458,7 +459,6 @@ app.get('/hybrid/qcloud/bgpip',function(req, res) {
                                                 SecretKey: config.qcloud.SecretKey,
                                                 serviceType: 'account'
                                         });
-
                                 var params = assign({Region:'sh',
                                                 Action: 'NS.BGPIP.GetServicePacks',
                                                 'region':'sh'});
@@ -678,9 +678,17 @@ app.all('/user/:token', function(req, resp) {
 });
 
 
+
+
+
+
+
+
+
 //高仿ip列表
+/*
 app.get('/gfip/list',function(req,resp){
-    /*
+
     id	bgpip-000001	String	高防IP的资源ID
     lbid	lb-xxxxxxxx	String	负载均衡IP的资源ID，只有高防IP是云内IP时才有该字段
     name	80Gbps	String	高防IP的名称，由用户自定义
@@ -712,7 +720,6 @@ app.get('/gfip/list',function(req,resp){
     ----
 
     transRules	12	Integer	该高防IP配置的转发规则数
-    */
 
 
     console.log("get get my       ");
@@ -729,44 +736,99 @@ app.get('/gfip/list',function(req,resp){
     resp.send(JSON.stringify(result));
 
 });
+*/
 
-
-//高仿ip列表
+//高仿ip规则列表
 app.get('/gfipRule/list',function(req,resp){
 
+    new Promise(function(resolve,reject){
+        //删除规则
+        //查处本条高仿ip下所有规则
+        var x = {
+            'region': 'sh'
+          };
+        var params = assign({
+            Region: 'sh',
+            Action: 'NS.BGPIP.ServicePack.GetTransRules',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+            },
+            x);
 
-    /**
-     *
-     total	123	Integer	该高防IP共配置过多少条转发规则
-     transRules	[obj,…]	Array	攻击详情数组，数组元素如下：
-     {
-           "id": "rule-00000001",
-           "protocol": "TCP"
-           "virtualPort": "80",
-           "sourcePort": "80",
-           "ipList": "1.2.3.4；1.1.1.1"
-     }
-     id	rule-00000001	String	该转发规则的ID
-     protocol	TCP	String	转发规则所用协议，目前只支持TCP
-     virtualPort	80	Integer	转发端口
-     sourcePort	80	Integer	源站端口
-     ipList	"1.2.3.4；1.1.1.1"	String	要转发到机器的IP列表，一条规则不超过20个IP
-     */
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+            capi.request(params, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     return data;
+            });
+    }).then(function(result){
+        resp.send(JSON.stringify(result));
+    });
 
 
-    var result = {gfipRules:[
-        {"id":"rule-00000001","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.4；1.1.1.1"},
-        {"id":"rule-00000002","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；2.2.2.2"},
-    ]};
-
-
-
-    resp.send(JSON.stringify(result));
 });
 
 
 //删除高仿ip规则
 app.post("/gfipRule/del",function(req,resp){
+
+    new Promise(function(resolve,reject){
+        //删除规则
+        var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+        });
+        var x = {
+            'region': 'sh'
+        }
+        var params = assign({
+                Region: 'sh',
+                Action: 'NS.BGPIP.ServicePack.DeleteTransRules',
+                uleId:''
+            },
+        x);
+        capi.request(params, {
+                 serviceType: 'csec'
+        }, function(error, data) {
+                 //console.log(data)
+            resolve(data);
+        });
+    }).then(
+        //查处本条高仿ip下所有规则
+        function(result1){
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+            var x = {
+                'region': 'sh'
+            };
+            var params = assign({
+                    Region: 'sh',
+                    Action: 'NS.BGPIP.ServicePack.GetTransRules',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+                },
+            x);
+            capi.request(params, {
+                     serviceType: 'csec'
+            }, function(error, data) {
+                     return data;
+            });
+        }
+    ).then(function(result2){
+        resp.send(JSON.stringify(result2));
+    });
+
+    /*
     //var id = req.body.ruleId;
     var json = JSON.parse(req.body);
     var id = json.ruleId;
@@ -784,21 +846,121 @@ app.post("/gfipRule/del",function(req,resp){
     result.gfipRules.splice(0,1);
     console.info("res       "+JSON.stringify(result));
     resp.send(JSON.stringify(result));
+    */
 });
 
 //修改高仿ip
 app.post("/gfip/update",function(req,resp){
+    /*
     var json = JSON.parse(req.body);
     var result = {"gfip":{}};
     result.gfip = json;
     console.info("res    update   "+JSON.stringify(json));
     resp.send(JSON.stringify(json));
+    */
+
+    new Promise(function(resolve,reject){
+        //增加规则
+        var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+        });
+        var x = {
+                'region': 'sh'
+            };
+        var params = assign({
+                Region: 'sh',
+                Action: 'NS.BGPIP.ServicePack.AddTransRules',
+                bgpId: '',
+                vip: '',
+                protocol: '',
+                virtualPort: '',
+                sourcePort: '',
+                ipList: ''
+            },
+        x);
+
+        capi.request(params, {
+                serviceType: 'csec'
+        }, function(error, data) {
+                 //console.log(data)
+            resolve(data);
+        });
+    }).then(function(result){
+        resp.send(JSON.stringify(result));
+    });
 });
+
+
+
 
 
 //增加高仿ip规则
 app.post("/gfipRule/add",function(req,resp){
+
+    var id = req.body.ruleId;
+
+    new Promise(function(resolve,reject){
+        //增加规则
+        var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+        });
+        var x = {
+                'region': 'sh'
+            };
+        var params = assign({
+                Region: 'sh',
+                Action: 'NS.BGPIP.ServicePack.AddTransRules',
+                bgpId: '',
+                vip: '',
+                protocol: '',
+                virtualPort: '',
+                sourcePort: '',
+                ipList: ''
+            },
+        x);
+
+        capi.request(params, {
+                 serviceType: 'csec'
+        }, function(error, data) {
+                 //console.log(data)
+            resolve(data);
+        });
+    }).then(
+        //查处本条高仿ip下所有规则
+        function(result1){
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+            var x = {
+                'region': 'sh'
+            };
+            var params = assign({
+                    Region: 'sh',
+                    Action: 'NS.BGPIP.ServicePack.GetTransRules',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+                },
+            x);
+
+            capi.request(params, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     return data;
+            });
+        }
+    ).then(function(result2){
+        resp.send(JSON.stringify(result2));
+    });
+
     //var id = req.body.ruleId;
+    /*
     var json = JSON.parse(req.body);
 
     console.info("res    ss   "+JSON.stringify(json));
@@ -810,7 +972,112 @@ app.post("/gfipRule/add",function(req,resp){
     result.gfipRules.push(json);
     console.info("res    ss   "+JSON.stringify(result));
     resp.send(JSON.stringify(result));
+    */
 });
+
+//开关弹性防护
+app.post("/elastic/protection",function(req,resp){
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+            var x = {
+                'region': 'sh'
+            };
+            var params = assign({
+                    Region: 'sh',
+                    Action: 'NS.BGPIP.ServicePack.GetTransRules',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+                },
+            x);
+
+            capi.request(params, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     resp.send(JSON.stringify(result2));
+            });
+});
+
+//开关cc防护
+app.post("/cc/protection",function(req,resp){
+
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+
+             var x = {
+                'region': 'sh'
+            };
+            var params = assign({
+                    Region: 'sh',
+                    Action: 'NS.BGPIP.ServicePack.GetTransRules',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+                },
+            x);
+
+            capi.request(params, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     resp.send(JSON.stringify(result2));
+            });
+});
+
+
+//设置弹性防护阀值
+app.post("/cc/threshold",function(req,resp){
+
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            });
+            var x = {
+                'region': 'sh'
+            };
+            var params = assign({
+                    Region: 'sh',
+                    Action: 'NS.BGPIP.ServicePack.SetCCThreshold',
+                    bgpId:'',
+                    'paging.index':'',
+                    'paging.count':''
+                },
+            x);
+
+            capi.request(params, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     resp.send(JSON.stringify(result2));
+            });
+});
+
+/*
+//开关cc防护
+app.post("/cc/protection",function(req,resp){
+
+            var capi = new Capi({
+                SecretId: config.qcloud.SecretIdc,
+                SecretKey: config.qcloud.SecretKeyc,
+                serviceType: 'account'
+            })
+
+            capi.request({
+                    Action: 'NS.BGPIP.ServicePack.SetElasticProtectionLimit',
+                    bgpId:'',
+                    limit:''
+            }, {
+                     serviceType: 'cvm'
+            }, function(error, data) {
+                     return data;
+            });
+});
+*/
 
 
 

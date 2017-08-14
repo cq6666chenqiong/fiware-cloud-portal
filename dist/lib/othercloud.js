@@ -171,9 +171,10 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         },callbackError);
     }
 
-
+/*
     //获取高仿ip列表
     var getGFIPList = function(model,callback,callbackError){
+    alert("sss");
         sendRequest('GET',
             '/gfip/list',
             undefined,
@@ -181,13 +182,14 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
               callback(JSON.parse(resp));
             },callbackError);
     };
-
+*/
     //修改高仿ip信息
     var updateGFIPInfo = function(model,callback,callbackError,options){
         sendRequest('POST',
             '/gfip/update',
             JSON.stringify(options.context),
             function(resp){
+            alert(resp);
                 callback(JSON.parse(resp));
             },callbackError);
     };
@@ -224,6 +226,20 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
             },callbackError);
     };
 
+
+
+
+
+    //获取高仿ip列表
+    var getGFIPList = function(model,callback,callbackError){
+        sendRequest('GET',
+            'hybrid/qcloud/getGFIPList',
+            undefined,
+            function(resp){
+              callback(JSON.parse(resp));
+            },callbackError);
+    };
+
   
     return {
             getRegion:getRegion,
@@ -242,10 +258,11 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
             createSecurityGroup:createSecurityGroup,
             delSecurityGroup:delSecurityGroup,
             describeSecurityGroupDetail:describeSecurityGroupDetail,
-        getGFIPList:getGFIPList,
+        //getGFIPList:getGFIPList,
         getRuleList:getRuleList,
         delRule:delRule,
         addRule:addRule,
-        updateGFIPInfo:updateGFIPInfo
+        updateGFIPInfo:updateGFIPInfo,
+        getGFIPList:getGFIPList
            };
 }(OTHERCLOUD));
