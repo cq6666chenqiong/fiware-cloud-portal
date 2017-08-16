@@ -13,6 +13,7 @@ var AccessAndSecurityView = Backbone.View.extend({
         this.secuirtyGroupsView = new NovaSecurityGroupsView({model: UTILS.GlobalModels.get("securityGroupsModel"), el: '#security_groups'});
         this.keyparisView = new NovaKeypairsView({model: UTILS.GlobalModels.get("keypairsModel"), el: '#keypairs'});
         this.newGFIPView = new NovaGFIPView({model: UTILS.GlobalModels.get("gFIPLModels"), el: '#gf_ips'});
+        this.whiteListView = new WhiteListView({ el: '#whitelist'});
 
     },
 

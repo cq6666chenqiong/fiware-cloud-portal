@@ -41,15 +41,15 @@ var NovaGFIPView = Backbone.View.extend({
             }
         };
         btns.push ({
-                label: "修改高仿ip信息",
+                label: "编辑高仿ip信息",
                 action: "editInfo",
                 activatePattern: oneSelected
             },  {
-                label: "修改高仿ip规则",
+                label: "编辑高仿ip规则",
                 action: "editRule",
                 activatePattern: oneSelected
             },  {
-                label: "修改高仿ip白名单",
+                label: "编辑高仿ip白名单",
                 action: "editWhiteList",
                 activatePattern: oneSelected
             }

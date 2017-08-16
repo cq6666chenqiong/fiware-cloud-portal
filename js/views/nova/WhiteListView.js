@@ -1,6 +1,6 @@
-var EditWhiteListView = Backbone.View.extend({
+var WhiteListView = Backbone.View.extend({
 
-    _template: _.itemplate($('#editWhiteListTemplate').html()),
+    _template: _.itemplate($('#whiteListTemplate').html()),
     tableView:undefined,
 
 
@@ -8,7 +8,7 @@ var EditWhiteListView = Backbone.View.extend({
         'click #cancelCreateBtn': 'close',
         'click .close': 'close',
         'click #delWhiteList':'delWhiteList',
-        'click #whiteList_add': 'addWhiteList'
+        'click #w_whiteList_add': 'addWhiteList'
     },
 
     initialize: function() {
@@ -17,8 +17,7 @@ var EditWhiteListView = Backbone.View.extend({
     },
 
     proRender: function(){
-        $('#whitelist').remove();
-        $('.modal-backdrop').remove();
+        $('#whitelist').empty();
         this.render();
     },
 
@@ -35,10 +34,9 @@ var EditWhiteListView = Backbone.View.extend({
 
     render: function () {
         $(this.el).append(this._template({ model: this.model}));
-        $('.modal:last').modal();
         var header = {"url":"url","operate":"操作"};
         this.tableView = new SmalltableView({
-            el: '#whitelist-table',
+            el: '#w_whitelist-table',
             model: this.model,
             context: this
         });
@@ -63,12 +61,14 @@ var EditWhiteListView = Backbone.View.extend({
     },
 
     addWhiteList: function() {
+        alert("add");
         var param = $('#w_whitelist_form').serialize();
         param = param.replace(/&/g, "','" );
         param = param.replace(/=/g, "':'" );
         param = "({'" +param + "'})" ;
         param = eval(param);
         //var a = $("#abc").serialize().split("%0D%0A");
+        alert(JSON.stringify(param));
         this.model.addWhiteList(param,this);
     }
 

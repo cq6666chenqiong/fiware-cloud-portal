@@ -4202,6 +4202,11 @@ src: templates/root/nova/accessAndSecurity.html
      <li class="">
     <a href="#gf_ips" data-toggle="tab">新高仿ip</a>
     </li>
+     <li class="">
+    <a href="#whitelist" data-toggle="tab">白名单</a>
+    </li>
+
+
 </ul>
 
 <div id="" class="tab-content tab-content-adjustable">
@@ -4209,6 +4214,8 @@ src: templates/root/nova/accessAndSecurity.html
 	<div id="security_groups" class="tab-pane tab-adjustable fade"></div>
 	<div id="keypairs" class="tab-pane tab-adjustable fade"></div>
     <div id="gf_ips" class="tab-pane tab-adjustable fade"></div>
+     <div id="whitelist" class="tab-pane tab-adjustable fade"></div>
+
 </div>
 
 </script>
@@ -4382,7 +4389,7 @@ src: templates/root/nova/blueprint/software.html
                  <form id="form_gaofangipInfo" onSubmit="return false;">
                 <div class="modal-header">
                     <a id="closeModal" href="#" class="close" data-dismiss="modal">&times;</a>
-                    <h5>修改高仿ip信息</h5>
+                    <h3>编辑高仿ip信息</h3>
                 </div>
                 <div class="modal-body clearfix">
                     <table class="table table-without-margins without-borders table-striped table-scrolled ov">
@@ -4458,7 +4465,7 @@ src: templates/root/nova/blueprint/software.html
     <div id="edit_rule" class="modal hide">
         <div class="modal-header">
             <a id="closeModal" href="#" class="close" data-dismiss="modal">&times;</a>
-            <h3>修改高仿ip信息</h3>
+            <h3>编辑高仿ip信息</h3>
         </div>
         <div class="modal-body clearfix">
             <div id="iprule-table"></div>
@@ -4490,9 +4497,28 @@ src: templates/root/nova/blueprint/software.html
                             <textarea  type="number" rows="3" cols="20" name="ipList" style="width: 80%" ></textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            请用回车分隔多个IP，<br>
+                            最多可输入本IP转发目<br>
+                            标区域内20个公网IP
+                        </td>
+                    </tr>
+
+
                 </table>
             </div>
             <div class="modal-footer">
+                <span class="pull-left">* 必填</span>
                 <input type="submit" id="gfipRule_add" class="btn btn-blue pull-right" value="增加"  >
                 <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">返回</a>
             </div>
@@ -4544,6 +4570,7 @@ src: templates/root/nova/blueprint/software.html
                 </table>
             </div>
             <div class="modal-footer">
+                <span class="pull-left">* 必填</span>
                 <input type="submit" id="whiteList_add" class="btn btn-blue pull-right" value="增加"  >
                 <a id="cancelBtn" class="btn secondary cancel close" data-dismiss="modal">返回</a>
             </div>
@@ -5724,6 +5751,48 @@ Description: Volumes
 src: templates/root/nova/volumes.html
 -->
     <div id="volumes-table"></div>
+</script>
+<script id="whiteListTemplate" type="text/html">
+    <div id="whitelist" style="position:absolute;height:100%; overflow:auto">
+
+            <div id="w_whitelist-table"></div>
+
+        <form id="w_whitelist_form" onsubmit="return false" style="border-top: 1px solid #f5f5f5">
+               <div>
+                <span class="pull-left"><h5>增加规则</h5></span>
+               </div>
+
+                <table class="table table-without-margins without-borders table-striped table-scrolled ov" >
+                    <tr>
+                        <td >ID/名称</td>
+                        <td >URL</td>
+                        <td >操作</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            *<input type="text"  name="ip" required style="width: 80%" placeholder="必填" />
+                        </td>
+                        <td>
+                           * <input type="text"  name="url" required style="width: 80%" placeholder="必填" />
+                        </td>
+                        <td>
+                            <input type="submit" id="w_whiteList_add" class="btn btn-blue" value="增加"  >
+                        </td>
+                    </tr>
+                     <tr>
+                        <td>
+                           * 必填
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+        </form>
+    </div>
 </script>
 <script id="objectstorageContainerTemplate" type="text/html">
 <!--
