@@ -988,17 +988,12 @@ var GFIPLModels = Backbone.Collection.extend({
         options.getGFStatusName = this.getGFStatusName;
         options.getTransTargetName = this.getTransTargetName;
         resp.gfips.forEach(function(instance){
-            //alert(JSON.stringify(instance));
-            //alert(JSON.stringify(instance.region));
-            //alert(JSON.stringify(this.getGFRegionName(instance.region)));
            instance.GFRegionName = options.getGFRegionName(instance.region);
            instance.GFStatusName = options.getGFStatusName(instance.status);
            instance.TransTargetName = options.getTransTargetName(instance.transTarget);
-
         });
-
-
         return resp.gfips;
+
     },
 
     getGFRegionName:function(region){

@@ -741,6 +741,21 @@ app.get('/gfip/list',function(req,resp){
 //高仿ip规则列表
 app.get('/gfipRule/list',function(req,resp){
 
+     var result = {gfipRules:[
+        {"id":"rule-00000001","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.4；1.1.1.1"},
+        {"id":"rule-00000002","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；2.2.2.2"},
+         {"id":"rule-00000003","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；3.3.3.3"},
+         {"id":"rule-00000004","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；4.4.4.4"},
+         {"id":"rule-00000005","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；5.5.5.5"},
+         {"id":"rule-00000006","protocol":"TCP","virtualPort":"80","sourcePort":"80","ipList":"1.2.3.5；6.6.6.6"}
+    ]};
+
+    //result.gfipRules.splice(0,1);
+    console.info("res       "+JSON.stringify(result));
+    resp.send(JSON.stringify(result));
+
+    /*
+
     new Promise(function(resolve,reject){
         //删除规则
         //查处本条高仿ip下所有规则
@@ -762,14 +777,14 @@ app.get('/gfipRule/list',function(req,resp){
                 serviceType: 'account'
             });
             capi.request(params, {
-                     serviceType: 'cvm'
+                     serviceType: 'csec'
             }, function(error, data) {
                      return data;
             });
     }).then(function(result){
         resp.send(JSON.stringify(result));
     });
-
+*/
 
 });
 

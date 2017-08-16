@@ -7,8 +7,7 @@ var EditGFIPRuleView = Backbone.View.extend({
     events: {
         'click #cancelCreateBtn': 'close',
         'click .close': 'close',
-        'click  #delRule':'delRule',
-        //'click .modal-backdrop': 'close',
+        'click #delRule':'delRule',
         'click #gfipRule_add': 'addRule'
     },
 
@@ -53,8 +52,10 @@ var EditGFIPRuleView = Backbone.View.extend({
     },
 
     close: function(e) {
-        $('#edit_rule').remove();
+        while($('#edit_rule').html()!=null||$('.modal-backdrop').html()!=null){
+             $('#edit_rule').remove();
         $('.modal-backdrop').remove();
+        }
         this.onClose();
     },
 

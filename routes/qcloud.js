@@ -13,14 +13,14 @@ const assign = require('object-assign');
 //var Promise = require('promise');
 var Promise = require('bluebird');
 var secret = "adeghskdjfhbqigohqdiouka";
-
+/*
 var oauth_client = new OAuth2(config.oauth.client_id,
                     config.oauth.client_secret,
                     config.oauth.account_server,
                     '/oauth2/authorize',
                     '/oauth2/token',
                     config.oauth.callbackURL);
-
+*/
 var capi = new Capi({
         SecretId: config.qcloud.SecretId,
         SecretKey: config.qcloud.SecretKey,
@@ -174,6 +174,7 @@ router.get('/region',function (req,res) {
 
 
 //validate userToken
+/*
 router.use(function (req,res,next) {
     var url = config.oauth.account_server + '/user';
     // Using the access token asks the IDM for the user info
@@ -189,7 +190,7 @@ router.use(function (req,res,next) {
     });
 });
 
-
+*/
 router.post('/cvm/:id/start',function (req,res) {
 
     var options = {
@@ -263,7 +264,7 @@ router.get('/securityGroup/:sgId/securityGroupRule',function(req, res) {
     })
 });
 
-
+/*
 //fetch adminAccessToken
 router.use(function (req,res,next) {
     var headers = {
@@ -278,7 +279,7 @@ router.use(function (req,res,next) {
     });
 
     var options = {
-        url: /*config.oauth.account_server*/ 'http://124.251.62.217:8000' + '/oauth2/token',
+        url:  'http://124.251.62.217:8000' + '/oauth2/token',
         body: form_data,
         headers: headers
     };
@@ -294,8 +295,8 @@ router.use(function (req,res,next) {
         }
     });
 });
-
-
+*/
+/*config.oauth.account_server*/
 var encodeClientCredentials = function(clientId, clientSecret) {
 	return new Buffer(querystring.escape(clientId) + ':' + querystring.escape(clientSecret)).toString('base64');
 };
@@ -616,7 +617,7 @@ router.get('/getGFIPList',function(req, resp) {
     console.log("list-----list!!!!");
 
     /*console.log(req.userId); */
-    /*
+
 var result = {gfips:[
         {"id":"bgpip-000001","lbid":"lb-xxxxxxxx1","name":"80Gbps","region":"gz",
             "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
@@ -625,8 +626,9 @@ var result = {gfips:[
             "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
             "status":"idle","expire":"2016-03-02 01:23:45","locked":"yes","transTarget":"nqcloud","transRules":12},
     ]};
-*/
+resp.send(JSON.stringify(result));
 
+/*
     var userId = req.userId;
     var adminAccessToken = req.adminAccessToken;
 
@@ -653,7 +655,7 @@ var result = {gfips:[
     });
    //console.log(JSON.stringify(result));
     //resp.send(JSON.stringify(result));
-
+*/
 });
 
 module.exports = router;

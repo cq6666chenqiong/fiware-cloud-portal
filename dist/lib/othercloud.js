@@ -189,7 +189,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
             '/gfip/update',
             JSON.stringify(options.context),
             function(resp){
-            alert(resp);
+            //alert(resp);
                 callback(JSON.parse(resp));
             },callbackError);
     };

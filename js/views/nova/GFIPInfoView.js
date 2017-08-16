@@ -22,8 +22,10 @@ var GFIPInfoView = Backbone.View.extend({
     },
 
     close: function(e) {
-        $('#gfip_info').remove();
-        $('.modal-backdrop').remove();
+        while($('#gfip_info').html()!=null||$('.modal-backdrop').html()!=null){
+            $('#gfip_info').remove();
+            $('.modal-backdrop').remove();
+        }
         this.onClose();
     },
 

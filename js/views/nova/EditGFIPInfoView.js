@@ -5,8 +5,14 @@ var EditGFIPInfoView = Backbone.View.extend({
     events: {
         'click #cancelCreateBtn': 'close',
         'click .close': 'close',
-        'submit #form_gaofangipInfo': 'updateGFIPInfo'
-        //'click .modal-backdrop': 'close'
+        'submit #form_gaofangipInfo': 'updateGFIPInfo',
+        'click #threshold_button':'editThreshold',
+        'click #cc_protect_button':'editCCprotect',
+        'click .modal-backdrop': 'close'
+    },
+
+    initialize: function(){
+           //this.model.set({'cc_protect':0,'threshold':100});
     },
 
     proRender:function(){
@@ -18,14 +24,35 @@ var EditGFIPInfoView = Backbone.View.extend({
     },
 
     render: function () {
+        //alert(JSON.stringify(this.model));
+        while($('#editGaoFangipInfo').html()!=null){
+            $('#editGaoFangipInfo').remove();
+            $('.modal-backdrop').remove();
+        }
         $(this.el).append(this._template({ model: this.model}));
         $('.modal:last').modal();
         return this;
     },
 
+    editThreshold: function(){
+        alert("editThreshold-23");
+        var value = $("#threshold").val();
+        this.model.set({'threshold':value});
+        alert(value);
+    },
+
+    editCCprotect: function(){
+        alert("editCCprotect-1");
+        var value=$('#cc_protect option:selected').val();
+        this.model.set({'cc_protect':value});
+        alert(value);
+    },
+
     close: function(e) {
-        $('#edit_info').remove();
-        $('.modal-backdrop').remove();
+        while($('#editGaoFangipInfo').html()!=null){
+            $('#editGaoFangipInfo').remove();
+            $('.modal-backdrop').remove();
+        }
         this.onClose();
     },
 

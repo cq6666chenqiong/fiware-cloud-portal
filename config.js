@@ -59,13 +59,14 @@ config.https = {
 config.useIDM = true;
 
 // OAuth configuration. Only set this configuration if useIDM is true.
+/*
 config.oauth = {
     account_server: 'http://10.20.200.62:8000',
     client_id: 'f6f1e9bda1144b5185539672c09c5541',
     client_secret: '10b12a87af2b4e0890a10d19d8b6bb11',
     callbackURL: 'http://192.168.5.176:8000/login'
 };
-
+*/
 config.productAdminOauth = {
     client_id: '9c9bca6d26234ff98fb93df3e3d065c5',
     client_secret: 'e1396a545ace426a941c0edfd3403d0f',
