@@ -171,6 +171,13 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         },callbackError);
     }
 
+
+
+
+
+
+    /***********************************************************************************************************/
+
 /*
     //获取高仿ip列表
     var getGFIPList = function(model,callback,callbackError){
@@ -227,11 +234,8 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     };
 
 
-
-
-
     //获取高仿ip列表
-    var getGFIPList = function(model,callback,callbackError){
+    var getGFIPList = function(model,callback,callbackError,options){
         sendRequest('GET',
             'hybrid/qcloud/getGFIPList',
             undefined,
@@ -239,6 +243,41 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
               callback(JSON.parse(resp));
             },callbackError);
     };
+
+
+    var getWhiteList = function(model,callback,callbackError,options){
+        sendRequest('GET',
+            '/whitelist/list',
+            undefined,
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    }
+
+    var addWhiteList = function(model,callback,callbackError,options){
+        sendRequest('POST',
+            '/whitelist/add',
+            JSON.stringify(options.context),
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    }
+
+    var delWhiteList = function(model,callback,callbackError,options){
+        var p = {};
+        p.whitelist = [{'url':options.url}];
+        alert(JSON.stringify(p));
+        sendRequest('POST',
+            '/whitelist/del',
+            JSON.stringify(p),
+            function(resp){
+                callback(JSON.parse(resp));
+            },callbackError);
+    }
+
+
+
+    /******************************************************************************************************************/
 
   
     return {
@@ -258,11 +297,13 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
             createSecurityGroup:createSecurityGroup,
             delSecurityGroup:delSecurityGroup,
             describeSecurityGroupDetail:describeSecurityGroupDetail,
-        //getGFIPList:getGFIPList,
-        getRuleList:getRuleList,
-        delRule:delRule,
-        addRule:addRule,
-        updateGFIPInfo:updateGFIPInfo,
-        getGFIPList:getGFIPList
+            getRuleList:getRuleList,
+            delRule:delRule,
+            addRule:addRule,
+            updateGFIPInfo:updateGFIPInfo,
+            getGFIPList:getGFIPList,
+            getWhiteList:getWhiteList,
+            addWhiteList:addWhiteList,
+            delWhiteList:delWhiteList
            };
 }(OTHERCLOUD));

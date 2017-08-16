@@ -48,6 +48,10 @@ var NovaGFIPView = Backbone.View.extend({
                 label: "修改高仿ip规则",
                 action: "editRule",
                 activatePattern: oneSelected
+            },  {
+                label: "修改高仿ip白名单",
+                action: "editWhiteList",
+                activatePattern: oneSelected
             }
         );
         return btns;
@@ -213,6 +217,23 @@ var NovaGFIPView = Backbone.View.extend({
                 subview = new EditGFIPRuleView({el: 'body',  model_parent_id: mode.id});
                 subview.getList(mode.id);
                 //subview.render();
+                break;
+            case 'editWhiteList':
+                if(!this.getOneSelectedID()){
+                    alert("请之选择一个高仿ip!");
+                    return;
+                }
+                var mode = null;
+                for(var i=0;i<this.model.length;i++){
+                    var t = this.model.models[i];
+                    if(t.id == this.getOneSelectedID()){
+                        mode = t;
+                        break;
+                    }
+                }
+                subview = new EditWhiteListView({el: 'body'});
+                //subview.getList(mode.id);
+                subview.render();
                 break;
 
         }

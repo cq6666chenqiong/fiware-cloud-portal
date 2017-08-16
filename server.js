@@ -681,7 +681,7 @@ app.all('/user/:token', function(req, resp) {
 
 
 
-
+/**********************************************************************************************************************/
 
 
 
@@ -1042,6 +1042,7 @@ app.post("/cc/protection",function(req,resp){
             }, function(error, data) {
                      resp.send(JSON.stringify(result2));
             });
+
 });
 
 
@@ -1095,6 +1096,36 @@ app.post("/cc/protection",function(req,resp){
 */
 
 
+app.get("/whitelist/list",function(req,resp){
+    console.log("whitelist----list!");
+    var result = {'whitelist':[{'id':1,'url':'http://www.111.com'},{'id':2,'url':'http://www.222.com'}]};
+    console.log(JSON.stringify(result));
+    resp.send(JSON.stringify(result));
+
+});
+
+app.post("/whitelist/add",function(req,resp){
+    console.log("whitelist----add!"+"  "+req.body.url);
+    var json = JSON.parse(req.body);
+    var result = {'whitelist':[{'id':1,'url':'http://www.111.com'},{'id':2,'url':'http://www.222.com'},
+        {'id':3,'url':json.url}]};
+    console.log(JSON.stringify(result));
+    resp.send(JSON.stringify(result));
+
+});
+
+app.post("/whitelist/del",function(req,resp){
+    console.log("whitelist----del!");
+    var json = JSON.parse(req.body);
+    console.log("whitelist----del!==="+json.url);
+    var result = {'whitelist':[
+        {'id':1,'url':'http://www.111.com'}
+       ]};
+    resp.send(JSON.stringify(result));
+});
+
+
+/***********************************************************************************************************************/
 
 app.all('/*', function(req, res) {
     console.log("------ Unknown request ", req.url);
