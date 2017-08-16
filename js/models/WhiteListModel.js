@@ -115,10 +115,14 @@ var WhiteListModels = Backbone.Collection.extend({
     },
 
     delWhiteList:function(url,obj){
-        var options = options || {};
-        options.url = url;
-        options.obj = obj;
-        return this._action('delWhiteList', options);
+        var tag = confirm("确定要删除吗？");
+        if(tag){
+            var options = options || {};
+            options.url = url;
+            options.obj = obj;
+            return this._action('delWhiteList', options);
+        }
+
     },
 
     addWhiteList:function(context,obj){

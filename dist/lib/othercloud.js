@@ -266,7 +266,6 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     var delWhiteList = function(model,callback,callbackError,options){
         var p = {};
         p.whitelist = [{'url':options.url}];
-        alert(JSON.stringify(p));
         sendRequest('POST',
             '/whitelist/del',
             JSON.stringify(p),

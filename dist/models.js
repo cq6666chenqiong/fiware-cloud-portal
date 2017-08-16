@@ -1160,10 +1160,13 @@ var GFIPRuleModels = Backbone.Collection.extend({
     },
 
     delRule:function(ruleId,obj){
-        var options = options || {};
-        options.ruleId = ruleId;
-        options.obj = obj;
-        return this._action('delRule', options);
+        var tag = confirm("确定要删除吗？");
+        if(tag){
+            var options = options || {};
+            options.ruleId = ruleId;
+            options.obj = obj;
+            return this._action('delRule', options);
+        }
     },
 
     addRule:function(context,obj){
@@ -3808,10 +3811,14 @@ var WhiteListModels = Backbone.Collection.extend({
     },
 
     delWhiteList:function(url,obj){
-        var options = options || {};
-        options.url = url;
-        options.obj = obj;
-        return this._action('delWhiteList', options);
+        var tag = confirm("确定要删除吗？");
+        if(tag){
+            var options = options || {};
+            options.url = url;
+            options.obj = obj;
+            return this._action('delWhiteList', options);
+        }
+
     },
 
     addWhiteList:function(context,obj){
@@ -3862,7 +3869,6 @@ var WhiteListModels = Backbone.Collection.extend({
         resp.whitelist.forEach(function(instance){
             instance.operate = "<button id=\'delWhiteList\' class=\'btn btn-blue\' attrId='"+instance.id+"'>删除规则</button>";
         });
-        alert(JSON.stringify(resp.whitelist));
         return resp.whitelist;
 
     }

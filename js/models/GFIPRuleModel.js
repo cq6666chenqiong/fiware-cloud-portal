@@ -115,10 +115,13 @@ var GFIPRuleModels = Backbone.Collection.extend({
     },
 
     delRule:function(ruleId,obj){
-        var options = options || {};
-        options.ruleId = ruleId;
-        options.obj = obj;
-        return this._action('delRule', options);
+        var tag = confirm("确定要删除吗？");
+        if(tag){
+            var options = options || {};
+            options.ruleId = ruleId;
+            options.obj = obj;
+            return this._action('delRule', options);
+        }
     },
 
     addRule:function(context,obj){

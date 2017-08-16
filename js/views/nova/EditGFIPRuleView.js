@@ -28,7 +28,6 @@ var EditGFIPRuleView = Backbone.View.extend({
     },
 
     delRule:function(e){
-        alert($(e.target).attr("attrId"));
         var ruleId = $(e.target).attr("attrId");
         this.model.delRule(ruleId,this);
     },

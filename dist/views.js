@@ -9015,7 +9015,6 @@ var EditGFIPRuleView = Backbone.View.extend({
     },
 
     delRule:function(e){
-        alert($(e.target).attr("attrId"));
         var ruleId = $(e.target).attr("attrId");
         this.model.delRule(ruleId,this);
     },
@@ -9087,13 +9086,10 @@ var EditWhiteListView = Backbone.View.extend({
     },
 
     delWhiteList:function(e){
-        alert($(e.target).attr("attrId"));
         var whiteId = $(e.target).attr("attrId");
         var url = "";
         for(var i=0;i<this.model.length;i++){
-             alert("idmodel====="+JSON.stringify(this.model.models[i]));
             if(this.model.models[i].id==whiteId){
-                alert("url==="+this.model.models[i].get("url"));
                 url = this.model.models[i].get("url");
             }
         }
