@@ -684,60 +684,6 @@ app.all('/user/:token', function(req, resp) {
 /**********************************************************************************************************************/
 
 
-
-//高仿ip列表
-/*
-app.get('/gfip/list',function(req,resp){
-
-    id	bgpip-000001	String	高防IP的资源ID
-    lbid	lb-xxxxxxxx	String	负载均衡IP的资源ID，只有高防IP是云内IP时才有该字段
-    name	80Gbps	String	高防IP的名称，由用户自定义
-    region	"gz/sh/bj"	String	高防IP的地域，目前有三个地区：gz:广州 sh:上海bj:北京
-    boundIP	1.2.3.4	String	高防IP的IP地址
-    bandwidth	10000Mbps	Integer	高防IP的防护带宽
-    elasticLimit	10000Mbps	Integer	弹性防护的阈值，超过该阈值后IP将被封堵
-    overloadCount	100	Integer	该高防IP被攻击超峰次数
-
-    ----
-    status	idle
-    attacking
-    blocking
-    creating
-    isolate	String	高防IP的状态： idle:正常工作中
-    attacking:正在被攻击
-    blocking:被封堵
-    creating:正常创建中
-    isolate:到期后被隔离
-    ----
-
-    expire	2016-03-02 01:23:45	Time	高防IP的到期时间
-    locked	yes/no	String	是否被锁
-    ---
-    transTarget	qcloud
-    nqcloud	String	高防IP的转发目标
-    qcloud:腾讯云内
-    nqcloud:腾讯云外
-    ----
-
-    transRules	12	Integer	该高防IP配置的转发规则数
-
-
-    console.log("get get my       ");
-
-    var result = {gfips:[
-        {"id":"bgpip-000001","lbid":"lb-xxxxxxxx1","name":"80Gbps","region":"gz",
-            "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
-            "status":"idle","expire":"2016-03-02 01:23:45","locked":"yes","transTarget":"nqcloud","transRules":12},
-        {"id":"bgpip-000002","lbid":"lb-xxxxxxxx2","name":"160Gbps","region":"sh",
-            "boundIP":"1.2.3.4","bandwidth":"10000Mbps","elasticLimit":"10000Mbps","overloadCount":"100",
-            "status":"idle","expire":"2016-03-02 01:23:45","locked":"yes","transTarget":"nqcloud","transRules":12},
-    ]};
-
-    resp.send(JSON.stringify(result));
-
-});
-*/
-
 //高仿ip规则列表
 app.get('/gfipRule/list',function(req,resp){
 
@@ -992,6 +938,10 @@ app.post("/gfipRule/add",function(req,resp){
 
 //开关弹性防护
 app.post("/elastic/protection",function(req,resp){
+
+            var json = JSON.parse(req.body);
+            var threshold = json.threshold;
+
             var capi = new Capi({
                 SecretId: config.qcloud.SecretIdc,
                 SecretKey: config.qcloud.SecretKeyc,
@@ -1014,10 +964,17 @@ app.post("/elastic/protection",function(req,resp){
             }, function(error, data) {
                      resp.send(JSON.stringify(result2));
             });
+
+
 });
 
 //开关cc防护
 app.post("/cc/protection",function(req,resp){
+            console.log("cc_protection  !!!---------------------------");
+
+            var json = JSON.parse(req.body);
+            var status = json.status;
+            console.log("cc_protection  status !!!---------------------------"+status);
 
             var capi = new Capi({
                 SecretId: config.qcloud.SecretIdc,
@@ -1046,9 +1003,14 @@ app.post("/cc/protection",function(req,resp){
 });
 
 
-//设置弹性防护阀值
+//设置cc防护阀值
 app.post("/cc/threshold",function(req,resp){
+            console.log("cc_threshold  !!!---------------------------");
 
+            var json = JSON.parse(req.body);
+            var threshold = json.threshold;
+
+            console.log("cc_threshold  threshold !!!---------------------------"+threshold);
             var capi = new Capi({
                 SecretId: config.qcloud.SecretIdc,
                 SecretKey: config.qcloud.SecretKeyc,
@@ -1073,29 +1035,7 @@ app.post("/cc/threshold",function(req,resp){
             });
 });
 
-/*
-//开关cc防护
-app.post("/cc/protection",function(req,resp){
-
-            var capi = new Capi({
-                SecretId: config.qcloud.SecretIdc,
-                SecretKey: config.qcloud.SecretKeyc,
-                serviceType: 'account'
-            })
-
-            capi.request({
-                    Action: 'NS.BGPIP.ServicePack.SetElasticProtectionLimit',
-                    bgpId:'',
-                    limit:''
-            }, {
-                     serviceType: 'cvm'
-            }, function(error, data) {
-                     return data;
-            });
-});
-*/
-
-
+//获取白名单列表
 app.get("/whitelist/list",function(req,resp){
     console.log("whitelist----list!");
     var result = {'whitelist':[{'id':1,'url':'http://www.111.com'},{'id':2,'url':'http://www.222.com'}]};
@@ -1104,6 +1044,7 @@ app.get("/whitelist/list",function(req,resp){
 
 });
 
+//增加白名单
 app.post("/whitelist/add",function(req,resp){
     console.log("whitelist----add!"+"  "+req.body.url);
     var json = JSON.parse(req.body);
@@ -1114,6 +1055,7 @@ app.post("/whitelist/add",function(req,resp){
 
 });
 
+//删除白名单
 app.post("/whitelist/del",function(req,resp){
     console.log("whitelist----del!");
     var json = JSON.parse(req.body);
@@ -1123,6 +1065,10 @@ app.post("/whitelist/del",function(req,resp){
        ]};
     resp.send(JSON.stringify(result));
 });
+
+
+
+
 
 
 /***********************************************************************************************************************/

@@ -56,6 +56,20 @@ var GFIPLModel = Backbone.Model.extend({
         this._action("update",options);
     },
 
+    updateThreshold:function(value,obj){
+        var options = options || {};
+        options.value = value;
+        options.obj = obj;
+        this._action('updateThreshold',options);
+    },
+
+    updateCCStatus:function(value,obj){
+        var options = options || {};
+        options.value = value;
+        options.obj = obj;
+        this._action('updateCCStatus',options);
+    },
+
     sync: function(method, model, options) {
         switch(method) {
             case "detail":
@@ -64,7 +78,12 @@ var GFIPLModel = Backbone.Model.extend({
             case "update":
                 OTHERCLOUD.API.updateGFIPInfo(model, options.success, options.error,options, this.getRegion());
                 break;
-
+            case "updateThreshold":
+                OTHERCLOUD.API.updateThreshold(model, options.success, options.error,options, this.getRegion());
+                break;
+            case "updateCCStatus":
+                OTHERCLOUD.API.updateCCStatus(model, options.success, options.error,options, this.getRegion());
+                break;
         }
     },
 

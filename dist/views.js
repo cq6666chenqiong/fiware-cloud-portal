@@ -8937,7 +8937,6 @@ var EditGFIPInfoView = Backbone.View.extend({
     },
 
     render: function () {
-        //alert(JSON.stringify(this.model));
         while($('#editGaoFangipInfo').html()!=null){
             $('#editGaoFangipInfo').remove();
             $('.modal-backdrop').remove();
@@ -8948,17 +8947,17 @@ var EditGFIPInfoView = Backbone.View.extend({
     },
 
     editThreshold: function(){
-        alert("editThreshold-23");
         var value = $("#threshold").val();
-        this.model.set({'threshold':value});
-        alert(value);
+        this.model.updateThreshold(value,this);
+        // this.model.set({'threshold':value});
+        // alert(value);
     },
 
     editCCprotect: function(){
-        alert("editCCprotect-1");
-        var value=$('#cc_protect option:selected').val();
-        this.model.set({'cc_protect':value});
-        alert(value);
+        var value=$('#cc_protect').val();
+        this.model.updateCCStatus(value,this);
+        // this.model.set({'cc_protect':value});
+        // alert(value);
     },
 
     close: function(e) {
