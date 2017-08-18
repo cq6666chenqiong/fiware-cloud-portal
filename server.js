@@ -15,6 +15,9 @@ var qs = require("qs");
 
 var users = require('./routes/users');
 var qcloud = require('./routes/qcloud');
+
+var test = require('./routes/testServer.js');
+
 var Promise = require('bluebird');
 
 var oauth_config = config.oauth;
@@ -256,6 +259,14 @@ app.set('view engine', 'ejs');
 
 app.use('/users', users);
 app.use('/hybrid/qcloud/',qcloud);
+
+
+/**************************************/
+app.use('/mytest', test);
+
+/**************************************/
+
+
 
 app.get('/', function(req, res) {
 

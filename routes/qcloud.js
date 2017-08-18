@@ -13,14 +13,14 @@ const assign = require('object-assign');
 //var Promise = require('promise');
 var Promise = require('bluebird');
 var secret = "adeghskdjfhbqigohqdiouka";
-/*
+
 var oauth_client = new OAuth2(config.oauth.client_id,
                     config.oauth.client_secret,
                     config.oauth.account_server,
                     '/oauth2/authorize',
                     '/oauth2/token',
                     config.oauth.callbackURL);
-*/
+
 var capi = new Capi({
         SecretId: config.qcloud.SecretId,
         SecretKey: config.qcloud.SecretKey,
@@ -174,7 +174,7 @@ router.get('/region',function (req,res) {
 
 
 //validate userToken
-/*
+
 router.use(function (req,res,next) {
     var url = config.oauth.account_server + '/user';
     // Using the access token asks the IDM for the user info
@@ -190,7 +190,7 @@ router.use(function (req,res,next) {
     });
 });
 
-*/
+
 router.post('/cvm/:id/start',function (req,res) {
 
     var options = {
@@ -264,7 +264,7 @@ router.get('/securityGroup/:sgId/securityGroupRule',function(req, res) {
     })
 });
 
-/*
+
 //fetch adminAccessToken
 router.use(function (req,res,next) {
     var headers = {
@@ -295,7 +295,6 @@ router.use(function (req,res,next) {
         }
     });
 });
-*/
 /*config.oauth.account_server*/
 var encodeClientCredentials = function(clientId, clientSecret) {
 	return new Buffer(querystring.escape(clientId) + ':' + querystring.escape(clientSecret)).toString('base64');

@@ -81,10 +81,11 @@ config.qcloud = {
         SecretKey: 'mLjxwgDVebNtEKEvPeePuBCxTjlopfGg',
 };
 
+/*
 config.delivery  = {
         baseUrl:'http://192.168.87.1:3002'
 }
-
+*/
 config.qcloud.projectId = '1057374'; //for create keypair
 
 config.qcloud.region = {
@@ -98,7 +99,7 @@ config.qcloud.region = {
 
 
 config.delivery  = {
-	baseUrl:'http://192.168.87.152:3000'
+	baseUrl:'http://124.251.62.216:3000'
 }
 
 config.time_stats_logger = false;
