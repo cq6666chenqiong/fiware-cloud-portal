@@ -14,7 +14,6 @@ var GFIPLModel = Backbone.Model.extend({
 
     },
 
-
     _action:function(method, options) {
         var model = this;
         options = options || {};

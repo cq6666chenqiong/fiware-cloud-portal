@@ -162,7 +162,6 @@ var WhiteListModels = Backbone.Collection.extend({
                 OTHERCLOUD.API.delWhiteList(model, options.success, options.error, options,this.getRegion());
             break;
             case "addWhiteList":
-                alert("add too");
                 OTHERCLOUD.API.addWhiteList(model, options.success, options.error, options,this.getRegion());
             break;
         }

@@ -193,7 +193,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     //修改高仿ip信息
     var updateGFIPInfo = function(model,callback,callbackError,options){
         sendRequest('POST',
-            '/gfip/update',
+            '/gfip/gfipInfo/update',
             JSON.stringify(options.context),
             function(resp){
             //alert(resp);
@@ -204,7 +204,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     //获取高仿ip规则列表
     var getRuleList = function(model,callback,callbackError,options){
         sendRequest('GET',
-            '/gfipRule/list?bgpId='+options.parent_id,
+            '/gfip/gfipRule/list?bgpId='+options.parent_id,
             undefined,
             function(resp){
                 callback(JSON.parse(resp));
@@ -216,7 +216,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         var p = {};
         p.ruleId = options.ruleId;
         sendRequest('POST',
-            '/gfipRule/del',
+            '/gfip/gfipRule/del',
             JSON.stringify(p),
             function(resp){
                 callback(JSON.parse(resp));
@@ -226,7 +226,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     //增加高仿ip规则
     var addRule = function(model,callback,callbackError,options){
         sendRequest('POST',
-            '/gfipRule/add',
+            '/gfip/gfipRule/add',
             JSON.stringify(options.context),
             function(resp){
                 callback(JSON.parse(resp));
@@ -247,7 +247,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     //获取白名单列表
     var getWhiteList = function(model,callback,callbackError,options){
         sendRequest('GET',
-            '/whitelist/list',
+            '/gfip/whitelist/list',
             undefined,
             function(resp){
                 callback(JSON.parse(resp));
@@ -257,7 +257,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
     //增加白名单
     var addWhiteList = function(model,callback,callbackError,options){
         sendRequest('POST',
-            '/whitelist/add',
+            '/gfip/whitelist/add',
             JSON.stringify(options.context),
             function(resp){
                 callback(JSON.parse(resp));
@@ -269,7 +269,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         var p = {};
         p.whitelist = [{'url':options.url}];
         sendRequest('POST',
-            '/whitelist/del',
+            '/gfip/whitelist/del',
             JSON.stringify(p),
             function(resp){
                 callback(JSON.parse(resp));
@@ -283,7 +283,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         p.threshold = options.value;
         alert(JSON.stringify(p));
         sendRequest('POST',
-            '/cc/threshold',
+            '/gfip/cc/threshold',
             JSON.stringify(p),
             function(resp){
                 callback(JSON.parse(resp));
@@ -297,7 +297,7 @@ OTHERCLOUD.API = (function (_OTHERCLOUD,undefined) {
         p.status = options.value;
         alert(JSON.stringify(p));
         sendRequest('POST',
-            '/cc/protection',
+            '/gfip/cc/protection',
             JSON.stringify(p),
             function(resp){
                 callback(JSON.parse(resp));

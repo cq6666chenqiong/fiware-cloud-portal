@@ -65,7 +65,7 @@ const assign = require('object-assign');
         });
     }).then(function(adminAccessToken){
         var url = 'http://124.251.62.217:8000' + '/user';
-        var token = "f1c21fbd09ae2909add967cf87a8b1cc7e59a97533ad877cb0a6bd1920e20502";
+        var token = "f7f40d4f72047f549bc48ee15da370345e46ea149cc95ba56d6b50b85218579b";
         var options = {};
 
         new Promise(function(resolve,reject){
@@ -89,7 +89,7 @@ const assign = require('object-assign');
                    // headers: {'content-type' : 'application/json','Authorization': 'Bearer ' + user.adminAccessToken },
                    // url:     config.delivery.baseUrl + '/v1/hybrid/instance?userId=' + user.userId + '&provider=qcloud&productName=cvm',
                     headers: {'content-type' : 'application/json','Authorization': 'Bearer ' + user.adminAccessToken },
-                    url : "http:// 124.251.62.216:3000/v1/hybrid/instance?userId="+user.userId+'&provider=qcloud&productName=cvm'
+                    url : "http://124.251.62.216:3003/v1/hybrid/instance?userId="+user.userId //+'&provider=qcloud&productName=cvm'
                 }
                 console.log("come in 2   "+options.url+"     "+options.headers.Authorization);
                 request.get(options, function(e, response, body) {
